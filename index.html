@@ -476,6 +476,70 @@ nav.tabs button.active svg{filter:drop-shadow(0 0 8px rgba(204,255,0,.5));}
 .toast.train .to-ic svg{color:var(--volt);}
 .toast .to-t{font-weight:800;font-size:13.5px;}
 .toast .to-m{font-size:12px;color:var(--muted);margin-top:1px;}
+
+/* ============================================================
+   DIARIO ALIMENTARE — editor voci + macro a 4 voci
+   ============================================================ */
+.fill-cho>span{background:linear-gradient(90deg,#ffcf6b,#ff9e44);}
+.fill-fat>span{background:linear-gradient(90deg,#b39dff,#7ad6ff);}
+
+.meal-card{padding:14px 14px 12px;margin-bottom:12px;}
+.meal-card.eaten{border-color:rgba(255,158,68,.35);}
+.meal-h{display:flex;align-items:center;gap:11px;}
+.meal-card .chk{flex:0 0 auto;width:26px;height:26px;border-radius:9px;border:2px solid var(--border-strong);
+  display:grid;place-items:center;background:var(--surface-2);transition:.15s;}
+.meal-card .chk svg{width:15px;height:15px;opacity:0;transform:scale(.5);transition:.15s;color:#0b0c0e;}
+.meal-card.eaten .chk{background:var(--amber);border-color:var(--amber);}
+.meal-card.eaten .chk svg{opacity:1;transform:scale(1);}
+.meal-hi{flex:1;min-width:0;}
+.meal-hi .slot{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);font-weight:700;}
+.meal-hi .slot .alt-flag{color:var(--amber);background:var(--amber-dim);padding:1px 5px;border-radius:5px;font-size:9px;}
+.meal-hi .name{font-weight:700;font-size:14.5px;margin-top:1px;}
+.meal-kcal{font-family:'Anton';font-size:20px;color:var(--text);line-height:1;}
+.meal-kcal small{font-size:10px;color:var(--muted);margin-left:2px;}
+
+.frows{margin-top:11px;border-top:1px solid var(--border);}
+.frow{display:flex;align-items:center;gap:9px;padding:9px 0;border-bottom:1px solid var(--border);}
+.frow:last-child{border-bottom:none;}
+.frow.rm{opacity:.42;}
+.fr-tg{flex:0 0 auto;width:26px;height:26px;display:grid;place-items:center;color:var(--volt);background:none;}
+.fr-tg svg{width:19px;height:19px;}
+.fr-tg.del{color:var(--muted-2);} .fr-tg.del svg{width:16px;height:16px;}
+.frow.rm .fr-tg{color:var(--muted-2);}
+.fr-main{flex:1;min-width:0;}
+.fr-n{font-size:13.5px;font-weight:600;}
+.frow.rm .fr-n{text-decoration:line-through;}
+.ex-tag{font-size:9px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--volt);background:var(--volt-dim);padding:1px 5px;border-radius:4px;}
+.ex-tag.alt{color:var(--amber);background:var(--amber-dim);}
+.fr-mac{font-size:10.5px;color:var(--muted);margin-top:2px;}
+.fr-amt{flex:0 0 auto;display:flex;align-items:center;gap:4px;}
+.stp{width:28px;height:28px;border-radius:8px;background:var(--surface-3);border:1px solid var(--border);
+  color:var(--text);font-size:17px;font-weight:700;display:grid;place-items:center;line-height:1;}
+.stp:active{transform:scale(.9);background:var(--volt-dim);}
+.ain{width:46px;background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:6px 4px;
+  color:var(--text);font-family:'Space Mono';font-size:12.5px;text-align:center;}
+.ain:focus{outline:none;border-color:var(--volt);}
+.fr-amt .un{font-size:10px;color:var(--muted-2);width:12px;}
+
+.meal-actions{display:flex;gap:8px;margin-top:11px;}
+.addfood{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px;border-radius:10px;
+  background:var(--surface-2);border:1px dashed var(--border-strong);color:var(--text);font-weight:700;font-size:12px;}
+.addfood:active{transform:scale(.98);}
+.addfood svg{width:14px;height:14px;color:var(--volt);}
+.meal-card .swap-btn{margin:0;}
+.meal-card .swap-btn.locked{opacity:.85;}
+
+/* food picker */
+.fp-card{max-height:82vh;overflow-y:auto;}
+.fp-title{font-family:'Anton';font-size:24px;text-transform:uppercase;letter-spacing:.02em;}
+.fp-cat{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:16px 0 8px;}
+.fp-grid{display:flex;flex-direction:column;gap:7px;}
+.fp-item{display:flex;align-items:center;gap:10px;padding:11px 13px;border-radius:11px;background:var(--surface-2);
+  border:1px solid var(--border);text-align:left;}
+.fp-item:active{transform:scale(.99);border-color:var(--volt);}
+.fp-item .fp-n{flex:1;font-weight:700;font-size:13.5px;}
+.fp-item .fp-m{font-size:11px;color:var(--muted);}
+.fp-item svg{width:18px;height:18px;color:var(--volt);flex:0 0 auto;}
 </style>
 </head>
 <body>
@@ -562,6 +626,16 @@ nav.tabs button.active svg{filter:drop-shadow(0 0 8px rgba(204,255,0,.5));}
 
 <!-- TOASTS -->
 <div class="toast-wrap" id="toastWrap"></div>
+
+<!-- FOOD PICKER -->
+<div class="pw-overlay" id="foodPicker">
+  <div class="pw-card fp-card">
+    <button class="pw-x" id="fpClose"><i data-lucide="x"></i></button>
+    <h2 class="fp-title">Aggiungi alimento</h2>
+    <p class="pw-sub">Scegli una fonte da aggiungere al pasto.</p>
+    <div class="fp-list" id="fpList"></div>
+  </div>
+</div>
 
 <script>
 /* ============================================================
@@ -713,17 +787,17 @@ const EQUIP_LABEL={home:'Casa',db:'Manubri',gym:'Palestra'};
    ============================================================ */
 const GOALS = {
   mass:{ key:'mass', label:'Massa / Ipertrofia', short:'Massa', icon:'trending-up',
-    kcal:1.12, pro:1.0, rest:150,
+    kcal:1.12, pro:1.0, cho:1.30, fat:1.05, rest:150,
     tagline:'Costruisci muscolo in surplus calorico.',
     food:'Surplus: aggiungi ~1 porzione di carboidrati ai pasti principali (+50–80g riso/pasta o +1 frutto). Più energia = più crescita.',
     train:'Carichi più pesanti, RPE 8–9, punta al fondo del range reps. Recupero 2–2:30 per spingere sui carichi.' },
   cut:{ key:'cut', label:'Definizione / Shred', short:'Shred', icon:'flame',
-    kcal:0.82, pro:1.12, rest:60,
+    kcal:0.82, pro:1.12, cho:0.60, fat:0.85, rest:60,
     tagline:'Brucia grasso mantenendo i muscoli.',
     food:'Deficit: riduci i carboidrati dei pasti (~-30%) tenendo ALTE le proteine. Verdure a volontà per sazietà.',
     train:'Recuperi brevi (45–75s) per alzare densità e dispendio. Mantieni i carichi, aumenta il volume.' },
   recomp:{ key:'recomp', label:'Ricomposizione', short:'Recomp', icon:'scale',
-    kcal:1.0, pro:1.05, rest:90,
+    kcal:1.0, pro:1.05, cho:1.0, fat:1.0, rest:90,
     tagline:'Stesso peso, più muscolo e meno grasso.',
     food:'Calorie di mantenimento, macro bilanciati. La costanza batte tutto: stesso peso settimana su settimana.',
     train:'Volume costante, doppia progressione, recupero 90s. Forza in lieve crescita nel tempo.' },
@@ -732,146 +806,203 @@ function goal(){ return GOALS[state.profile.goal] || GOALS.recomp; }
 function goalRest(){ return goal().rest; }
 
 /* ============================================================
-   MEALS (con alternative iso-macro per "Sostituisci")
-   slot, name, items, kcal, pro, alts:[{name,items,kcal,pro}]
+   FOOD DATABASE — macro per 100g (u:'g') o per pezzo (u:'pz')
+   cat: pro|cho|fat|veg|other · extra:1 = disponibile nel selettore "Aggiungi"
    ============================================================ */
-const M = {
-  // colazioni huel ricorrenti
-  huelBase:{slot:'Colazione',name:'Huel Black',items:'2 misurini + 300ml acqua',kcal:400,pro:40,
-    alts:[{name:'Porridge proteico',items:'60g avena + 1 scoop whey + 200ml acqua + cannella',kcal:400,pro:38},
-          {name:'Uova + pane',items:'3 uova strapazzate + 2 fette pane integrale',kcal:400,pro:30}]},
+const FOOD_DB = {
+  // PROTEINE
+  pollo:{l:'Petto di pollo',u:'g',kcal:165,pro:31,cho:0,fat:3.6,cat:'pro',extra:1},
+  tacchino:{l:'Fesa di tacchino',u:'g',kcal:135,pro:29,cho:0,fat:1,cat:'pro',extra:1},
+  salmone:{l:'Salmone',u:'g',kcal:208,pro:20,cho:0,fat:13,cat:'pro',extra:1},
+  salmoneaff:{l:'Salmone affumicato',u:'g',kcal:117,pro:25,cho:0,fat:4,cat:'pro'},
+  branzino:{l:'Branzino',u:'g',kcal:97,pro:18,cho:0,fat:2.5,cat:'pro'},
+  merluzzo:{l:'Merluzzo',u:'g',kcal:82,pro:18,cho:0,fat:0.7,cat:'pro',extra:1},
+  tonno:{l:'Tonno al naturale',u:'g',kcal:116,pro:26,cho:0,fat:1,cat:'pro',extra:1},
+  manzo:{l:'Manzo magro',u:'g',kcal:175,pro:26,cho:0,fat:8,cat:'pro',extra:1},
+  uovo:{l:'Uovo',u:'pz',kcal:72,pro:6.3,cho:0.4,fat:5,cat:'pro',extra:1,step:1},
+  ceci:{l:'Ceci cotti',u:'g',kcal:164,pro:9,cho:27,fat:2.6,cat:'pro'},
+  lenticchie:{l:'Lenticchie cotte',u:'g',kcal:116,pro:9,cho:20,fat:0.4,cat:'pro'},
+  ricotta:{l:'Ricotta magra',u:'g',kcal:130,pro:11,cho:4,fat:7,cat:'pro',extra:1},
+  yogurtgreco:{l:'Yogurt greco 0%',u:'g',kcal:59,pro:10,cho:3.6,fat:0.4,cat:'pro',extra:1},
+  whey:{l:'Whey (scoop)',u:'pz',kcal:120,pro:24,cho:3,fat:1.5,cat:'pro',extra:1,step:1},
+  caseine:{l:'Caseine (scoop)',u:'pz',kcal:110,pro:24,cho:2,fat:1,cat:'pro',step:1},
+  huel:{l:'Huel Black (misurino)',u:'pz',kcal:200,pro:20,cho:8,fat:8,cat:'pro',step:1},
+  barretta:{l:'Barretta proteica',u:'pz',kcal:210,pro:21,cho:20,fat:7,cat:'pro',extra:1,step:1},
+  grana:{l:'Grana / parmigiano',u:'g',kcal:392,pro:33,cho:0,fat:29,cat:'pro',extra:1},
+  // CARBOIDRATI
+  riso:{l:'Riso (cotto)',u:'g',kcal:130,pro:2.7,cho:28,fat:0.3,cat:'cho',extra:1},
+  risoint:{l:'Riso integrale (cotto)',u:'g',kcal:111,pro:2.6,cho:23,fat:0.9,cat:'cho'},
+  pasta:{l:'Pasta integrale (cotta)',u:'g',kcal:124,pro:5,cho:25,fat:1.1,cat:'cho',extra:1},
+  patatedolci:{l:'Patate dolci',u:'g',kcal:86,pro:1.6,cho:20,fat:0.1,cat:'cho',extra:1},
+  patate:{l:'Patate',u:'g',kcal:77,pro:2,cho:17,fat:0.1,cat:'cho',extra:1},
+  quinoa:{l:'Quinoa (cotta)',u:'g',kcal:120,pro:4.4,cho:21,fat:1.9,cat:'cho'},
+  avena:{l:'Avena',u:'g',kcal:389,pro:13,cho:66,fat:7,cat:'cho',extra:1},
+  pane:{l:'Pane integrale (fetta)',u:'pz',kcal:80,pro:3,cho:13,fat:1,cat:'cho',extra:1,step:1},
+  banana:{l:'Banana',u:'pz',kcal:105,pro:1.3,cho:27,fat:0.4,cat:'cho',extra:1,step:1},
+  mela:{l:'Mela',u:'pz',kcal:95,pro:0.5,cho:25,fat:0.3,cat:'cho',step:1},
+  pera:{l:'Pera',u:'pz',kcal:100,pro:0.6,cho:27,fat:0.2,cat:'cho',step:1},
+  arancia:{l:'Arancia',u:'pz',kcal:62,pro:1.2,cho:15,fat:0.2,cat:'cho',step:1},
+  fruttibosco:{l:'Frutti di bosco',u:'g',kcal:43,pro:1,cho:10,fat:0.3,cat:'cho'},
+  latteavena:{l:'Latte di avena',u:'g',kcal:45,pro:0.3,cho:7,fat:1.5,cat:'cho'},
+  miele:{l:'Miele (cucchiaio)',u:'pz',kcal:64,pro:0,cho:17,fat:0,cat:'cho',step:1},
+  // GRASSI
+  evo:{l:'Olio EVO (cucchiaio)',u:'pz',kcal:90,pro:0,cho:0,fat:10,cat:'fat',extra:1,step:1},
+  mandorle:{l:'Mandorle',u:'g',kcal:579,pro:21,cho:22,fat:49,cat:'fat',extra:1},
+  noci:{l:'Noci',u:'g',kcal:654,pro:15,cho:14,fat:65,cat:'fat',extra:1},
+  burroarachidi:{l:'Burro di arachidi (cucchiaio)',u:'pz',kcal:94,pro:4,cho:3,fat:8,cat:'fat',extra:1,step:1},
+  avocado:{l:'Avocado',u:'g',kcal:160,pro:2,cho:9,fat:15,cat:'fat',extra:1},
+  cacao:{l:'Cacao amaro (cucchiaio)',u:'pz',kcal:12,pro:1,cho:2,fat:0.7,cat:'other',step:1},
+  // VERDURE
+  zucchine:{l:'Zucchine',u:'g',kcal:17,pro:1.2,cho:3,fat:0.3,cat:'veg'},
+  broccoli:{l:'Broccoli',u:'g',kcal:34,pro:2.8,cho:7,fat:0.4,cat:'veg'},
+  spinaci:{l:'Spinaci',u:'g',kcal:23,pro:2.9,cho:3.6,fat:0.4,cat:'veg'},
+  insalata:{l:'Insalata mista',u:'g',kcal:17,pro:1,cho:3,fat:0.2,cat:'veg',extra:1},
+  asparagi:{l:'Asparagi',u:'g',kcal:20,pro:2.2,cho:4,fat:0.1,cat:'veg'},
+  pomodori:{l:'Pomodori',u:'g',kcal:18,pro:0.9,cho:3.9,fat:0.2,cat:'veg',extra:1},
+  verduregrigliate:{l:'Verdure grigliate',u:'g',kcal:30,pro:1.5,cho:5,fat:0.3,cat:'veg'},
+  verduremiste:{l:'Verdure miste',u:'g',kcal:25,pro:1.4,cho:4.5,fat:0.3,cat:'veg'},
 };
 
+/* alternative colazione Huel ricorrenti */
+const M = { huelBase:{ alts:[
+  {name:'Porridge proteico',items:'60g avena + 1 scoop whey + 200ml acqua',kcal:400,pro:38},
+  {name:'Uova + pane',items:'3 uova strapazzate + 2 fette pane integrale',kcal:400,pro:30}]}};
+
+/* ============================================================
+   MEALS — pasti del piano
+   base: foods:[[foodKey, quantità], ...]  (g per u:'g', pezzi per u:'pz')
+   alts: alternative PRO {name, items, kcal, pro} (cho/fat stimati a runtime)
+   ============================================================ */
 const MEALS = {
   mon:[
-    {id:'m1',slot:'Colazione',name:'Huel Black + banana',items:'2 misurini + 300ml latte avena + 1 banana',kcal:550,pro:42,
+    {id:'m1',slot:'Colazione',name:'Huel + banana',foods:[['huel',2],['latteavena',300],['banana',1]],
       alts:[{name:'Porridge + frutta',items:'60g avena + 1 scoop whey + 250ml latte avena + 1 banana',kcal:550,pro:40},
             {name:'Pancake proteici',items:'2 uova + 50g avena + 1 scoop whey + frutti di bosco',kcal:550,pro:44}]},
-    {id:'m2',slot:'Pranzo',name:'Pollo + riso basmati',items:'180g petto pollo grigliato + 200g riso + zucchine + EVO',kcal:620,pro:45,
+    {id:'m2',slot:'Pranzo',name:'Pollo + riso basmati',foods:[['pollo',180],['riso',200],['zucchine',150],['evo',1]],
       alts:[{name:'Tacchino + riso',items:'180g fesa tacchino + 200g riso basmati + zucchine + EVO',kcal:620,pro:46},
             {name:'Tofu/seitan + riso',items:'200g tofu/seitan saltato + 200g riso + zucchine + EVO',kcal:620,pro:40},
             {name:'Huel + riso',items:'2 misurini Huel + 150g riso a parte + verdure',kcal:620,pro:44},
             {name:'Gamberi + riso',items:'200g gamberi saltati + 200g riso + zucchine + EVO',kcal:620,pro:42},
             {name:'Poke bowl pollo',items:'160g pollo + 180g riso + edamame + avocado ¼ + soia',kcal:620,pro:44}]},
-    {id:'m3',slot:'Spuntino',name:'Yogurt greco + mandorle',items:'200g yogurt greco 0% + 20g mandorle + 1 cucchiaio miele',kcal:280,pro:22,
+    {id:'m3',slot:'Spuntino',name:'Yogurt greco + mandorle',foods:[['yogurtgreco',200],['mandorle',20],['miele',1]],
       alts:[{name:'Skyr + noci',items:'200g skyr + 15g noci + miele',kcal:280,pro:24},
             {name:'Whey + frutta secca',items:'1 scoop whey + 200ml acqua + 20g mandorle',kcal:280,pro:28}]},
-    {id:'m4',slot:'Cena',name:'Salmone + patate dolci',items:'180g salmone forno + 150g patate dolci + insalata + EVO + limone',kcal:550,pro:38,
+    {id:'m4',slot:'Cena',name:'Salmone + patate dolci',foods:[['salmone',180],['patatedolci',150],['insalata',80],['evo',1]],
       alts:[{name:'Branzino + patate dolci',items:'180g branzino + 150g patate dolci + insalata + EVO',kcal:550,pro:38},
             {name:'Trota + patate dolci',items:'180g trota al forno + 150g patate dolci + insalata',kcal:550,pro:40},
             {name:'Manzo + patate',items:'170g fettine manzo magro + 150g patate + insalata',kcal:550,pro:42},
             {name:'Pollo + patate dolci',items:'160g pollo + 150g patate dolci + insalata + EVO',kcal:550,pro:44},
             {name:'Frittata + patate',items:'4 uova + 30g grana + 150g patate dolci + insalata',kcal:550,pro:36}]},
-    {id:'m5',slot:'Pre-nanna',name:'Ricotta + cacao',items:'200g ricotta magra + 1 cucchiaio cacao amaro',kcal:220,pro:18,
+    {id:'m5',slot:'Pre-nanna',name:'Ricotta + cacao',foods:[['ricotta',200],['cacao',1]],
       alts:[{name:'Caseine',items:'1 scoop caseine + 250ml acqua/latte',kcal:220,pro:24},
             {name:'Yogurt greco',items:'200g yogurt greco 0% + cannella',kcal:200,pro:18}]},
   ],
   tue:[
-    {id:'m1',slot:'Colazione',name:'Huel Black',items:'2 misurini + 300ml acqua',kcal:400,pro:40,alts:M.huelBase.alts},
-    {id:'m2',slot:'Pranzo',name:'Uova + salmone affumicato',items:'3 uova strapazzate + 100g salmone affumicato + 2 fette pane integrale + pomodori',kcal:520,pro:42,
+    {id:'m1',slot:'Colazione',name:'Huel Black',foods:[['huel',2]],alts:M.huelBase.alts},
+    {id:'m2',slot:'Pranzo',name:'Uova + salmone affumicato',foods:[['uovo',3],['salmoneaff',100],['pane',2],['pomodori',100]],
       alts:[{name:'Frittata + tonno',items:'3 uova + 100g tonno + 2 fette pane integrale + pomodori',kcal:520,pro:44},
             {name:'Tacchino + uova',items:'2 uova + 120g tacchino arrosto + 2 fette pane integrale',kcal:520,pro:46},
             {name:'Bresaola + grana',items:'90g bresaola + 30g grana + 2 fette pane integrale + rucola',kcal:520,pro:44},
             {name:'Pollo + hummus wrap',items:'150g pollo + piadina integrale + hummus + insalata',kcal:520,pro:42}]},
-    {id:'m3',slot:'Spuntino',name:'Whey + mela',items:'1 scoop whey + acqua + 1 mela',kcal:200,pro:25,
+    {id:'m3',slot:'Spuntino',name:'Whey + mela',foods:[['whey',1],['mela',1]],
       alts:[{name:'Yogurt greco + frutta',items:'200g yogurt greco 0% + 1 mela',kcal:200,pro:20},
             {name:'Skyr',items:'200g skyr + cannella',kcal:200,pro:24}]},
-    {id:'m4',slot:'Cena',name:'Merluzzo + riso integrale',items:'200g merluzzo vapore + 120g riso integrale + broccoli + EVO',kcal:480,pro:44,
+    {id:'m4',slot:'Cena',name:'Merluzzo + riso integrale',foods:[['merluzzo',200],['risoint',120],['broccoli',150],['evo',1]],
       alts:[{name:'Nasello + riso',items:'200g nasello + 120g riso integrale + broccoli + EVO',kcal:480,pro:44},
             {name:'Pollo + riso',items:'150g pollo + 120g riso integrale + broccoli + EVO',kcal:480,pro:46},
             {name:'Gamberi + riso',items:'200g gamberi + 120g riso integrale + broccoli + EVO',kcal:480,pro:42},
             {name:'Tofu + riso',items:'200g tofu + 120g riso integrale + broccoli + soia',kcal:480,pro:36}]},
-    {id:'m5',slot:'Pre-nanna',name:'Yogurt greco + noci',items:'200g yogurt greco + 15g noci',kcal:220,pro:18,alts:M.mon?[]:[]},
+    {id:'m5',slot:'Pre-nanna',name:'Yogurt greco + noci',foods:[['yogurtgreco',200],['noci',15]],
+      alts:[{name:'Caseine',items:'1 scoop caseine + 250ml acqua',kcal:220,pro:24},
+            {name:'Ricotta',items:'200g ricotta magra',kcal:220,pro:18}]},
   ],
   wed:[
-    {id:'m1',slot:'Colazione',name:'Huel + avena + frutti di bosco',items:'2 misurini + 300ml latte avena + 50g avena + frutti di bosco',kcal:600,pro:44,
+    {id:'m1',slot:'Colazione',name:'Huel + avena + frutti di bosco',foods:[['huel',2],['latteavena',300],['avena',50],['fruttibosco',80]],
       alts:[{name:'Porridge completo',items:'70g avena + 1 scoop whey + 250ml latte avena + frutti di bosco',kcal:600,pro:42},
             {name:'Uova + avena',items:'3 uova + 50g avena + frutti di bosco + 1 cucchiaino miele',kcal:600,pro:40}]},
-    {id:'m2',slot:'Pranzo',name:'Tonno + pasta integrale',items:'180g tonno naturale + 200g pasta integrale + pomodoro + basilico + EVO',kcal:620,pro:46,
+    {id:'m2',slot:'Pranzo',name:'Tonno + pasta integrale',foods:[['tonno',180],['pasta',200],['pomodori',100],['evo',1]],
       alts:[{name:'Pollo + pasta',items:'160g pollo + 200g pasta integrale + pomodoro + EVO',kcal:620,pro:46},
             {name:'Sgombro + pasta',items:'150g sgombro + 200g pasta integrale + pomodoro',kcal:620,pro:44},
             {name:'Ceci + pasta',items:'200g ceci + 180g pasta integrale + pomodoro + EVO',kcal:620,pro:34},
             {name:'Salmone + pasta',items:'150g salmone + 200g pasta integrale + zucchine + EVO',kcal:620,pro:42},
             {name:'Ragù di tacchino + pasta',items:'180g macinato tacchino + 200g pasta + pomodoro',kcal:620,pro:48}]},
-    {id:'m3',slot:'Spuntino',name:'Barretta proteica + arancia',items:'1 barretta (>20g pro) + 1 arancia',kcal:250,pro:22,
+    {id:'m3',slot:'Spuntino',name:'Barretta proteica + arancia',foods:[['barretta',1],['arancia',1]],
       alts:[{name:'Whey + frutta',items:'1 scoop whey + 1 arancia + 10g mandorle',kcal:250,pro:26},
             {name:'Yogurt + miele',items:'200g yogurt greco + miele + 1 arancia',kcal:250,pro:20}]},
-    {id:'m4',slot:'Cena',name:'Manzo + verdure grigliate',items:'200g manzo magro fettine + peperoni/melanzane/zucchine + 100g patate lesse',kcal:540,pro:42,
+    {id:'m4',slot:'Cena',name:'Manzo + verdure grigliate',foods:[['manzo',200],['verduregrigliate',250],['patate',100]],
       alts:[{name:'Tacchino + verdure',items:'200g tacchino + verdure grigliate + 100g patate',kcal:540,pro:46},
             {name:'Pollo + verdure',items:'200g pollo + verdure grigliate + 100g patate',kcal:540,pro:48},
             {name:'Salmone + verdure',items:'180g salmone + verdure grigliate + 100g patate',kcal:540,pro:38},
             {name:'Hamburger magro + verdure',items:'2 burger manzo magro (180g) + verdure + 100g patate',kcal:540,pro:44}]},
-    {id:'m5',slot:'Pre-nanna',name:'Ricotta + cannella',items:'200g ricotta + cannella + 1 cucchiaino miele',kcal:220,pro:18,
+    {id:'m5',slot:'Pre-nanna',name:'Ricotta + cannella',foods:[['ricotta',200],['miele',1]],
       alts:[{name:'Caseine',items:'1 scoop caseine + 250ml acqua',kcal:220,pro:24}]},
   ],
   thu:[
-    {id:'m1',slot:'Colazione',name:'Huel Black',items:'2 misurini + 300ml acqua',kcal:400,pro:40,alts:M.huelBase.alts},
-    {id:'m2',slot:'Pranzo',name:'Tacchino + quinoa',items:'150g petto tacchino + 180g quinoa + spinaci saltati aglio + EVO',kcal:560,pro:44,
+    {id:'m1',slot:'Colazione',name:'Huel Black',foods:[['huel',2]],alts:M.huelBase.alts},
+    {id:'m2',slot:'Pranzo',name:'Tacchino + quinoa',foods:[['tacchino',150],['quinoa',180],['spinaci',150],['evo',1]],
       alts:[{name:'Pollo + quinoa',items:'150g pollo + 180g quinoa + spinaci + EVO',kcal:560,pro:46},
             {name:'Salmone + quinoa',items:'150g salmone + 160g quinoa + spinaci + EVO',kcal:560,pro:40},
             {name:'Gamberi + quinoa',items:'180g gamberi + 180g quinoa + spinaci + EVO',kcal:560,pro:42},
             {name:'Tempeh + quinoa',items:'180g tempeh + 180g quinoa + spinaci + EVO',kcal:560,pro:38}]},
-    {id:'m3',slot:'Spuntino',name:'Yogurt greco + noci + pera',items:'200g yogurt greco + 20g noci + 1 pera',kcal:280,pro:20,
+    {id:'m3',slot:'Spuntino',name:'Yogurt greco + noci + pera',foods:[['yogurtgreco',200],['noci',20],['pera',1]],
       alts:[{name:'Skyr + frutta secca',items:'200g skyr + 20g mandorle + 1 pera',kcal:280,pro:24}]},
-    {id:'m4',slot:'Cena',name:'Uova + lenticchie',items:'4 uova in camicia + 150g lenticchie + pomodori + EVO',kcal:480,pro:38,
+    {id:'m4',slot:'Cena',name:'Uova + lenticchie',foods:[['uovo',4],['lenticchie',150],['pomodori',100],['evo',1]],
       alts:[{name:'Pollo + lenticchie',items:'150g pollo + 150g lenticchie + pomodori + EVO',kcal:480,pro:44},
             {name:'Tonno + fagioli',items:'160g tonno + 150g fagioli cannellini + pomodori',kcal:480,pro:42},
             {name:'Salmone + lenticchie',items:'150g salmone + 150g lenticchie + pomodori + EVO',kcal:480,pro:40},
             {name:'Tacchino + lenticchie',items:'150g tacchino + 150g lenticchie + spinaci + EVO',kcal:480,pro:46}]},
-    {id:'m5',slot:'Pre-nanna',name:'Caseine o ricotta',items:'1 scoop caseine o 200g ricotta magra',kcal:200,pro:24,
+    {id:'m5',slot:'Pre-nanna',name:'Caseine o ricotta',foods:[['caseine',1]],
       alts:[{name:'Yogurt greco',items:'200g yogurt greco 0% + cannella',kcal:200,pro:18}]},
   ],
   fri:[
-    {id:'m1',slot:'Colazione',name:'Huel + banana + arachidi',items:'2 misurini + 300ml latte avena + 1 banana + 1 cucchiaio burro arachidi',kcal:650,pro:44,
+    {id:'m1',slot:'Colazione',name:'Huel + banana + arachidi',foods:[['huel',2],['latteavena',300],['banana',1],['burroarachidi',1]],
       alts:[{name:'Porridge ricco',items:'70g avena + 1 scoop whey + latte avena + banana + burro arachidi',kcal:650,pro:42},
             {name:'Uova + avocado toast',items:'3 uova + 2 fette pane + ½ avocado + banana',kcal:650,pro:36}]},
-    {id:'m2',slot:'Pranzo',name:'Pollo + riso + avocado',items:'180g pollo + 200g riso basmati + insalata + ½ avocado',kcal:640,pro:46,
+    {id:'m2',slot:'Pranzo',name:'Pollo + riso + avocado',foods:[['pollo',180],['riso',200],['insalata',80],['avocado',75]],
       alts:[{name:'Tacchino + riso',items:'180g tacchino + 200g riso + insalata + ½ avocado',kcal:640,pro:46},
             {name:'Gamberi + riso',items:'200g gamberi + 200g riso + insalata + avocado',kcal:640,pro:42},
             {name:'Manzo + riso',items:'170g manzo magro + 200g riso + insalata + ½ avocado',kcal:640,pro:46},
             {name:'Burrito bowl pollo',items:'160g pollo + 180g riso + fagioli neri + mais + avocado',kcal:640,pro:44}]},
-    {id:'m3',slot:'Spuntino',name:'Whey + mandorle',items:'1 scoop whey + 30g mandorle',kcal:280,pro:28,
+    {id:'m3',slot:'Spuntino',name:'Whey + mandorle',foods:[['whey',1],['mandorle',30]],
       alts:[{name:'Yogurt greco + noci',items:'200g yogurt greco + 25g noci',kcal:280,pro:22}]},
-    {id:'m4',slot:'Cena',name:'Branzino + patate dolci',items:'200g branzino forno + 150g patate dolci + asparagi + EVO',kcal:520,pro:40,
+    {id:'m4',slot:'Cena',name:'Branzino + patate dolci',foods:[['branzino',200],['patatedolci',150],['asparagi',100],['evo',1]],
       alts:[{name:'Orata + patate dolci',items:'200g orata + 150g patate dolci + asparagi + EVO',kcal:520,pro:40},
             {name:'Salmone + patate dolci',items:'180g salmone + 150g patate dolci + asparagi',kcal:520,pro:38},
             {name:'Merluzzo + patate dolci',items:'200g merluzzo + 150g patate dolci + asparagi + EVO',kcal:520,pro:42},
             {name:'Pollo + patate dolci',items:'160g pollo + 150g patate dolci + asparagi + EVO',kcal:520,pro:44}]},
-    {id:'m5',slot:'Pre-nanna',name:'Ricotta + cacao',items:'200g ricotta magra + cacao amaro',kcal:220,pro:18,
+    {id:'m5',slot:'Pre-nanna',name:'Ricotta + cacao',foods:[['ricotta',200],['cacao',1]],
       alts:[{name:'Caseine',items:'1 scoop caseine + 250ml acqua',kcal:220,pro:24}]},
   ],
   sat:[
-    {id:'m1',slot:'Colazione',name:'Huel Black',items:'2 misurini + 300ml acqua',kcal:400,pro:40,alts:M.huelBase.alts},
-    {id:'mfree',slot:'Pranzo',free:true,name:'Pasto libero',items:'Mangia quello che vuoi e goditelo. Un pasto libero/sett. non compromette nulla, anzi aiuta la compliance. Unica regola: una fonte proteica nel piatto.',kcal:0,pro:0,alts:[]},
-    {id:'m3',slot:'Spuntino',name:'Yogurt greco + frutta',items:'200g yogurt greco + frutta fresca',kcal:200,pro:18,
+    {id:'m1',slot:'Colazione',name:'Huel Black',foods:[['huel',2]],alts:M.huelBase.alts},
+    {id:'mfree',slot:'Pranzo',free:true,name:'Pasto libero',items:'Mangia quello che vuoi e goditelo. Un pasto libero/sett. non compromette nulla, anzi aiuta la compliance. Unica regola: una fonte proteica nel piatto.',alts:[]},
+    {id:'m3',slot:'Spuntino',name:'Yogurt greco + frutta',foods:[['yogurtgreco',200],['fruttibosco',100]],
       alts:[{name:'Skyr',items:'200g skyr + frutta fresca',kcal:200,pro:22}]},
-    {id:'m4',slot:'Cena',name:'Salmone + riso + verdure',items:'180g salmone + verdure miste + 100g riso',kcal:480,pro:38,
+    {id:'m4',slot:'Cena',name:'Salmone + riso + verdure',foods:[['salmone',180],['verduremiste',150],['riso',100]],
       alts:[{name:'Pollo + riso',items:'160g pollo + verdure + 100g riso',kcal:480,pro:44},
             {name:'Tonno + riso',items:'160g tonno + verdure + 100g riso',kcal:480,pro:42},
             {name:'Gamberi + riso',items:'180g gamberi + verdure + 100g riso',kcal:480,pro:40},
             {name:'Tacchino + riso',items:'160g tacchino + verdure + 100g riso',kcal:480,pro:46}]},
   ],
   sun:[
-    {id:'m1',slot:'Colazione',name:'Huel + frutti di bosco',items:'2 misurini + 300ml latte avena + frutti di bosco',kcal:500,pro:42,
+    {id:'m1',slot:'Colazione',name:'Huel + frutti di bosco',foods:[['huel',2],['latteavena',300],['fruttibosco',80]],
       alts:[{name:'Porridge',items:'60g avena + 1 scoop whey + latte avena + frutti di bosco',kcal:500,pro:40}]},
-    {id:'m2',slot:'Pranzo',name:'Pollo arrosto + patate',items:'200g pollo arrosto (petto+coscia) + 150g patate forno + insalata + EVO',kcal:620,pro:48,
+    {id:'m2',slot:'Pranzo',name:'Pollo arrosto + patate',foods:[['pollo',200],['patate',150],['insalata',80],['evo',1]],
       alts:[{name:'Tacchino arrosto',items:'200g tacchino + 150g patate forno + insalata + EVO',kcal:620,pro:48},
             {name:'Coniglio/arrosto magro',items:'200g carne bianca + 150g patate + insalata',kcal:620,pro:46},
             {name:'Salmone al forno',items:'200g salmone + 150g patate forno + insalata + EVO',kcal:620,pro:42},
             {name:'Roast beef + patate',items:'180g roast beef + 150g patate forno + insalata',kcal:620,pro:48}]},
-    {id:'m3',slot:'Spuntino',name:'Noci + frutto',items:'30g noci + 1 frutto',kcal:200,pro:5,
+    {id:'m3',slot:'Spuntino',name:'Noci + frutto',foods:[['noci',30],['mela',1]],
       alts:[{name:'Yogurt greco',items:'200g yogurt greco 0% + 1 frutto',kcal:200,pro:18}]},
-    {id:'m4',slot:'Cena',name:'Uova + ceci',items:'3 uova + 150g ceci + spinaci + EVO + limone',kcal:460,pro:34,
+    {id:'m4',slot:'Cena',name:'Uova + ceci',foods:[['uovo',3],['ceci',150],['spinaci',100],['evo',1]],
       alts:[{name:'Pollo + ceci',items:'130g pollo + 150g ceci + spinaci + EVO',kcal:460,pro:40},
             {name:'Tonno + ceci',items:'150g tonno + 150g ceci + spinaci + limone',kcal:460,pro:42},
             {name:'Gamberi + ceci',items:'160g gamberi + 150g ceci + spinaci + EVO',kcal:460,pro:38},
             {name:'Feta + ceci (veg)',items:'80g feta + 150g ceci + spinaci + pomodori + EVO',kcal:460,pro:30}]},
-    {id:'m5',slot:'Pre-nanna',name:'Yogurt greco + cannella',items:'200g yogurt greco + cannella',kcal:180,pro:18,
+    {id:'m5',slot:'Pre-nanna',name:'Yogurt greco + cannella',foods:[['yogurtgreco',200]],
       alts:[{name:'Ricotta',items:'180g ricotta magra + cannella',kcal:180,pro:16}]},
   ],
 };
-// fix tue m5 alts
-MEALS.tue[4].alts=[{name:'Caseine',items:'1 scoop caseine + 250ml acqua',kcal:220,pro:24},{name:'Ricotta',items:'200g ricotta magra',kcal:220,pro:18}];
 
 /* ============================================================
    STATE / PERSISTENCE
@@ -896,13 +1027,14 @@ function load(){
     fired:{}
   };
   if(!s.sub) s.sub={plan:'trial', start:Date.now()};    // abbonamento: trial|pro|free
+  if(!s.diary) s.diary={};                               // modifiche diario per data: {ds:{mealId:{items,extra,portion}}}
   return s;
 }
 function blank(){ return {checks:{}, swaps:{}, weights:[], loads:{}, overrides:{},
   equip:'db', profile:{goal:null},
   notif:{meals:false,workout:false,lead:15,workoutTime:'18:00',
     times:{'Colazione':'08:00','Pranzo':'13:00','Spuntino':'16:30','Cena':'20:00','Pre-nanna':'22:30'},fired:{}},
-  sub:{plan:'trial',start:Date.now()} }; }
+  sub:{plan:'trial',start:Date.now()}, diary:{} }; }
 function save(){ localStorage.setItem(KEY, JSON.stringify(state)); }
 
 /* ============================================================
@@ -1009,29 +1141,67 @@ function renderDayStrip(){
   strip.querySelectorAll('.day').forEach(b=>b.onclick=()=>{activeDayIdx=+b.dataset.day;render();});
 }
 
-/* ---------- macro computation ---------- */
+/* ---------- macro computation (food-DB + diario) ---------- */
 function dayMeals(idx){ return MEALS[dayKey(idx)]||[]; }
-function mealVariant(idx,m){
-  const ds=fmt(dateOf(idx));
-  const si=(state.swaps[ds]||{})[m.id]||0;
-  if(si===0||!m.alts||!m.alts.length) return {...m,_isAlt:false};
-  const a=m.alts[(si-1)%m.alts.length];
-  return {...m, name:a.name, items:a.items, kcal:a.kcal, pro:a.pro, _isAlt:true};
+
+// macro di un alimento dato il quantitativo (g per u:'g', pezzi per u:'pz')
+function foodMacro(k,amt){ const f=FOOD_DB[k]; if(!f) return zeroM(); const x=(f.u==='g'?amt/100:amt); return {kcal:f.kcal*x,pro:f.pro*x,cho:f.cho*x,fat:f.fat*x}; }
+function zeroM(){ return {kcal:0,pro:0,cho:0,fat:0}; }
+function addM(a,b){ return {kcal:a.kcal+b.kcal,pro:a.pro+b.pro,cho:a.cho+b.cho,fat:a.fat+b.fat}; }
+function scaleM(m,x){ return {kcal:m.kcal*x,pro:m.pro*x,cho:m.cho*x,fat:m.fat*x}; }
+function roundM(m){ return {kcal:Math.round(m.kcal),pro:Math.round(m.pro),cho:Math.round(m.cho),fat:Math.round(m.fat)}; }
+// stima carbo/grassi quando un'alternativa fornisce solo kcal+proteine
+function estimateCF(kcal,pro){ const npk=Math.max(0,kcal-pro*4); return {cho:Math.round(npk*0.55/4),fat:Math.round(npk*0.45/9)}; }
+
+function diaryRec(ds,mealId){
+  if(!state.diary[ds]) state.diary[ds]={};
+  if(!state.diary[ds][mealId]) state.diary[ds][mealId]={items:{},extra:[],portion:1};
+  const d=state.diary[ds][mealId];
+  if(!d.items)d.items={}; if(!d.extra)d.extra=[]; if(d.portion==null)d.portion=1;
+  return d;
 }
-function dayTotals(idx){
-  let kcal=0,pro=0;
-  dayMeals(idx).forEach(m=>{const v=mealVariant(idx,m);kcal+=v.kcal;pro+=v.pro;});
-  return {kcal,pro};
+// alternativa attiva (swap) per un pasto, o null
+function mealActiveAlt(idx,m){
+  const si=(state.swaps[fmt(dateOf(idx))]||{})[m.id]||0;
+  if(si===0||!m.alts||!m.alts.length) return null;
+  return m.alts[(si-1)%m.alts.length];
 }
-function dayConsumed(idx){
-  const r=rec(fmt(dateOf(idx))); let kcal=0,pro=0;
-  dayMeals(idx).forEach(m=>{ if(r.meals[m.id]){const v=mealVariant(idx,m);kcal+=v.kcal;pro+=v.pro;} });
-  return {kcal,pro};
+// elenco voci effettive del pasto (con modifiche del diario applicate)
+function mealItems(idx,m){
+  if(m.free) return {free:true,items:[]};
+  const d=diaryRec(fmt(dateOf(idx)),m.id);
+  const alt=mealActiveAlt(idx,m);
+  const items=[];
+  if(alt){
+    const cf=estimateCF(alt.kcal,alt.pro);
+    const base={kcal:alt.kcal,pro:alt.pro,cho:cf.cho,fat:cf.fat};
+    items.push({type:'alt',label:alt.name,detail:alt.items,portion:d.portion,macro:scaleM(base,d.portion),removed:false});
+  } else {
+    (m.foods||[]).forEach((p,i)=>{
+      const o=d.items[i]||{}; const removed=!!o.removed;
+      const amt=(o.g!=null)?o.g:p[1];
+      items.push({type:'base',idx:i,key:p[0],amt,removed,macro:removed?zeroM():foodMacro(p[0],amt)});
+    });
+  }
+  d.extra.forEach((p,j)=>items.push({type:'extra',j,key:p[0],amt:p[1],removed:false,macro:foodMacro(p[0],p[1])}));
+  return {alt,items};
 }
-// target giornalieri adattati all'obiettivo (massa/cut/recomp)
+function mealEatenMacro(idx,m){ return mealItems(idx,m).items.reduce((s,it)=>it.removed?s:addM(s,it.macro),zeroM()); }
+function mealPlanMacro(idx,m){
+  if(m.free) return zeroM();
+  const alt=mealActiveAlt(idx,m);
+  if(alt){ const cf=estimateCF(alt.kcal,alt.pro); return {kcal:alt.kcal,pro:alt.pro,cho:cf.cho,fat:cf.fat}; }
+  return (m.foods||[]).reduce((s,p)=>addM(s,foodMacro(p[0],p[1])),zeroM());
+}
+function planMacros(idx){ return dayMeals(idx).reduce((s,m)=>addM(s,mealPlanMacro(idx,m)),zeroM()); }
+function consumedMacros(idx){
+  const r=rec(fmt(dateOf(idx)));
+  return dayMeals(idx).reduce((s,m)=> r.meals[m.id]?addM(s,mealEatenMacro(idx,m)):s, zeroM());
+}
+// target giornalieri adattati all'obiettivo (massa/cut/recomp) — 4 macro
 function goalTargets(idx){
-  const t=dayTotals(idx), g=goal();
-  return {kcal:Math.round(t.kcal*g.kcal), pro:Math.round(t.pro*g.pro)};
+  const t=planMacros(idx), g=goal();
+  return {kcal:Math.round(t.kcal*g.kcal), pro:Math.round(t.pro*g.pro), cho:Math.round(t.cho*(g.cho||1)), fat:Math.round(t.fat*(g.fat||1))};
 }
 
 /* ---------- TODAY ---------- */
@@ -1039,9 +1209,7 @@ function viewToday(){
   const dk=dayKey(activeDayIdx);
   const wid=effWorkoutId(activeDayIdx);
   const w=wid?WORKOUTS[wid]:null;
-  const tot=goalTargets(activeDayIdx), con=dayConsumed(activeDayIdx);
   const g=goal();
-  const ring = ringSVG(tot.kcal?con.kcal/tot.kcal:0, 84, 'var(--amber)');
   const restNote = dk==='sun'?'Riposo attivo — camminata, mobilità, stretching':'Giorno di riposo — recupero e proteine';
 
   return `<div class="view">
@@ -1055,21 +1223,10 @@ function viewToday(){
       </div>
     </div>
 
-    <div class="card">
-      <div class="macros">
-        <div class="ring">${ring}
-          <div class="center"><div><div class="v">${con.kcal}</div><div class="l">/ ${tot.kcal} kcal</div></div></div>
-        </div>
-        <div class="mbars">
-          ${bar('Proteine', con.pro, tot.pro, 'fill-pro','g')}
-          ${bar('Calorie', con.kcal, tot.kcal, 'fill-kcal','kcal')}
-        </div>
-      </div>
-      <div class="goal-note"><i data-lucide="${g.icon}"></i><span><b>${g.label}.</b> ${g.food}</span></div>
-    </div>
+    ${macroSummary(activeDayIdx)}
 
     <div class="section-head"><h2>Pasti di oggi</h2><span class="pill">${countDone()} / ${dayMeals(activeDayIdx).length}</span></div>
-    <div class="card flush" style="padding:4px 14px">${mealsHTML(true)}</div>
+    ${mealsHTML()}
 
     ${w?`<div class="section-head"><h2>Allenamento</h2><span class="pill">${workoutPct()}%</span></div>
       <div class="card" style="cursor:pointer" id="gotoTrain">
@@ -1083,57 +1240,145 @@ function viewToday(){
 }
 function countDone(){ const r=rec(fmt(dateOf(activeDayIdx))); return dayMeals(activeDayIdx).filter(m=>r.meals[m.id]).length; }
 
-/* ---------- FOOD ---------- */
-function viewFood(){
-  const tot=goalTargets(activeDayIdx),con=dayConsumed(activeDayIdx),g=goal();
-  return `<div class="view">
-    <div class="section-head"><h2>${DAY_FULL[dayKey(activeDayIdx)]} — Alimentazione</h2></div>
-    <div class="card">
-      <div class="macros">
-        <div class="ring">${ringSVG(tot.kcal?con.kcal/tot.kcal:0,84,'var(--amber)')}
-          <div class="center"><div><div class="v">${tot.kcal}</div><div class="l">kcal obiettivo</div></div></div></div>
-        <div class="mbars">
-          ${bar('Proteine target', con.pro, tot.pro,'fill-pro','g')}
-          ${bar('Calorie consumate', con.kcal, tot.kcal,'fill-kcal','kcal')}
-        </div>
+/* riepilogo macro: kcal (anello) + barre Proteine/Carbo/Grassi — Assunti vs Obiettivo */
+function macroSummary(idx){
+  const tot=goalTargets(idx), con=roundM(consumedMacros(idx)), g=goal();
+  return `<div class="card">
+    <div class="macros">
+      <div class="ring">${ringSVG(tot.kcal?con.kcal/tot.kcal:0,84,'var(--amber)')}
+        <div class="center"><div><div class="v">${con.kcal}</div><div class="l">/ ${tot.kcal} kcal</div></div></div></div>
+      <div class="mbars">
+        ${bar('Proteine', con.pro, tot.pro,'fill-pro','g')}
+        ${bar('Carboidrati', con.cho, tot.cho,'fill-cho','g')}
+        ${bar('Grassi', con.fat, tot.fat,'fill-fat','g')}
       </div>
-      <div class="goal-note"><i data-lucide="${g.icon}"></i><span><b>${g.short}.</b> ${g.food}</span></div>
     </div>
-    <div class="card flush" style="padding:4px 14px">${mealsHTML(true)}</div>
-    <p class="tip">${isPro()?'Manca un ingrediente? Tocca <b>Sostituisci</b> per alternative iso-macro.':'<b>Sostituzione pasti</b> è una funzione PRO 🔒'}</p>
+    <div class="goal-note"><i data-lucide="${g.icon}"></i><span><b>${g.short}.</b> Assunti vs obiettivo del piano, in tempo reale.</span></div>
   </div>`;
 }
 
-function mealsHTML(withSwap){
-  const ds=fmt(dateOf(activeDayIdx));
-  const r=rec(ds);
+/* ---------- FOOD ---------- */
+function viewFood(){
+  return `<div class="view">
+    <div class="section-head"><h2>${DAY_FULL[dayKey(activeDayIdx)]} — Diario</h2></div>
+    ${macroSummary(activeDayIdx)}
+    ${mealsHTML()}
+    <p class="tip">Tocca <b>±</b> o scrivi i grammi per regolare le quantità: i macro si aggiornano all'istante. Deseleziona un alimento non consumato o aggiungine uno extra.${isPro()?'':'<br><b>Sostituzione pasti</b> 🔒 è una funzione PRO.'}</p>
+  </div>`;
+}
+
+/* riga alimento editabile */
+function foodRow(mealId,it){
+  const f=it.key?FOOD_DB[it.key]:null;
+  const name=it.type==='alt'?it.label:(f?f.l:it.key);
+  const unit=it.type==='alt'?'×':(f&&f.u==='pz'?'×':'g');
+  const amt=it.type==='alt'?(Math.round(it.portion*100)/100):it.amt;
+  const ref=it.type==='base'?('b:'+mealId+':'+it.idx):it.type==='extra'?('x:'+mealId+':'+it.j):('a:'+mealId);
+  const m=it.macro;
+  const left = it.type==='extra'
+      ? `<button class="fr-tg del" data-fxdel="${ref}" title="Rimuovi"><i data-lucide="trash-2"></i></button>`
+      : it.type==='alt'
+        ? `<span class="fr-tg"><i data-lucide="repeat"></i></span>`
+        : `<button class="fr-tg" data-fitem="${ref}"><i data-lucide="${it.removed?'square':'check-square'}"></i></button>`;
+  return `<div class="frow ${it.removed?'rm':''}">
+    ${left}
+    <div class="fr-main">
+      <div class="fr-n">${name}${it.type==='extra'?' <span class="ex-tag">extra</span>':''}${it.type==='alt'?' <span class="ex-tag alt">alt</span>':''}</div>
+      <div class="fr-mac mono">${Math.round(m.kcal)} kcal · P ${Math.round(m.pro)} · C ${Math.round(m.cho)} · G ${Math.round(m.fat)}</div>
+    </div>
+    <div class="fr-amt">
+      <button class="stp" data-fstep="${ref}:-1">−</button>
+      <input class="ain" inputmode="decimal" value="${amt}" data-fin="${ref}">
+      <span class="un">${unit}</span>
+      <button class="stp" data-fstep="${ref}:1">+</button>
+    </div>
+  </div>`;
+}
+
+function mealsHTML(){
   return dayMeals(activeDayIdx).map(m=>{
-    const v=mealVariant(activeDayIdx,m);
+    const r=rec(fmt(dateOf(activeDayIdx)));
     if(m.free){
-      return `<div class="meal" style="border-bottom:none">
-        <div class="body"><div class="slot">${m.slot}</div>
-          <div class="freebox" style="margin-top:6px">
-            <div class="t"><i data-lucide="pizza" style="width:16px;height:16px"></i> ${m.name}</div>
-            <p>${m.items}</p>
-          </div>
-        </div></div>`;
+      return `<div class="card meal-card"><div class="meal-h">
+          <div class="meal-hi"><div class="slot">${m.slot}</div><div class="name">${m.name}</div></div></div>
+        <div class="freebox"><div class="t"><i data-lucide="pizza" style="width:16px;height:16px"></i> Pasto libero</div><p>${m.items}</p></div></div>`;
     }
+    const {alt,items}=mealItems(activeDayIdx,m);
+    const sub=roundM(mealEatenMacro(activeDayIdx,m));
     const done=!!r.meals[m.id];
-    return `<div class="meal ${done?'done':''}" data-meal="${m.id}">
-      <div class="chk" data-check="${m.id}"><i data-lucide="check"></i></div>
-      <div class="body">
-        <div class="slot">${m.slot}</div>
-        <div class="name">${v.name} ${v._isAlt?'<span class="alt-flag">alt</span>':''}</div>
-        <div class="items">${v.items}</div>
-        <div class="foot">
-          <span class="kc"><b>${v.kcal}</b> kcal</span>
-          <span class="kc"><b>${v.pro}g</b> pro</span>
-          ${withSwap && m.alts && m.alts.length?`<button class="swap-btn ${isPro()?'':'locked'}" data-swap="${m.id}"><i data-lucide="${isPro()?'refresh-cw':'lock'}"></i> Sostituisci</button>`:''}
+    return `<div class="card meal-card ${done?'eaten':''}">
+      <div class="meal-h">
+        <button class="chk" data-check="${m.id}"><i data-lucide="check"></i></button>
+        <div class="meal-hi">
+          <div class="slot">${m.slot}${alt?' · <span class="alt-flag">'+alt.name+'</span>':''}</div>
+          <div class="name">${alt?alt.name:m.name}</div>
         </div>
+        <div class="meal-kcal mono">${sub.kcal}<small>kcal</small></div>
+      </div>
+      <div class="frows">${items.map(it=>foodRow(m.id,it)).join('')}</div>
+      <div class="meal-actions">
+        <button class="addfood" data-addfood="${m.id}"><i data-lucide="plus"></i> Aggiungi alimento</button>
+        ${m.alts&&m.alts.length?`<button class="swap-btn ${isPro()?'':'locked'}" data-swap="${m.id}"><i data-lucide="${isPro()?'refresh-cw':'lock'}"></i> Sostituisci</button>`:''}
       </div>
     </div>`;
   }).join('');
 }
+
+/* ---------- DIARY: picker + mutazioni quantità (real-time) ---------- */
+let fpTarget=null;
+const CAT_LABEL={pro:'Proteine',cho:'Carboidrati',fat:'Grassi',veg:'Verdure',other:'Altro'};
+function openFoodPicker(mealId){
+  fpTarget=mealId;
+  const list=document.getElementById('fpList');
+  list.innerHTML=['pro','cho','fat','veg'].map(c=>{
+    const keys=Object.keys(FOOD_DB).filter(k=>FOOD_DB[k].extra&&FOOD_DB[k].cat===c);
+    if(!keys.length) return '';
+    return `<div class="fp-cat">${CAT_LABEL[c]}</div><div class="fp-grid">`+
+      keys.map(k=>{const f=FOOD_DB[k];return `<button class="fp-item" data-addkey="${k}">
+        <span class="fp-n">${f.l}</span>
+        <span class="fp-m mono">${f.kcal} kcal ${f.u==='g'?'/100g':'/pz'}</span>
+        <i data-lucide="plus"></i></button>`;}).join('')+`</div>`;
+  }).join('');
+  list.querySelectorAll('[data-addkey]').forEach(b=>b.onclick=()=>addExtra(b.dataset.addkey));
+  document.getElementById('foodPicker').classList.add('show');
+  lucide.createIcons();
+}
+function closeFoodPicker(){ document.getElementById('foodPicker').classList.remove('show'); fpTarget=null; }
+function ensureEaten(mealId){ const r=rec(fmt(dateOf(activeDayIdx))); if(!r.meals[mealId]) r.meals[mealId]=true; }
+function addExtra(key){
+  if(!fpTarget) return;
+  const d=diaryRec(fmt(dateOf(activeDayIdx)),fpTarget);
+  const f=FOOD_DB[key];
+  d.extra.push([key, f.u==='pz'?1:100]);
+  ensureEaten(fpTarget);
+  save(); closeFoodPicker(); render();
+  toast('Aggiunto al pasto', f.l, 'meal');
+}
+function parseRef(ref){ const a=ref.split(':'); return {t:a[0],mealId:a[1],k:a[2]!=null?+a[2]:null}; }
+function stepAmount(ref,dir){
+  const {t,mealId,k}=parseRef(ref); const ds=fmt(dateOf(activeDayIdx)); const d=diaryRec(ds,mealId);
+  const m=dayMeals(activeDayIdx).find(x=>x.id===mealId);
+  if(t==='b'){ const f=FOOD_DB[m.foods[k][0]]; const step=f.u==='pz'?1:10;
+    const cur=(d.items[k]&&d.items[k].g!=null)?d.items[k].g:m.foods[k][1];
+    d.items[k]={g:Math.max(0,Math.round((cur+dir*step)*10)/10),removed:false}; }
+  else if(t==='x'){ const f=FOOD_DB[d.extra[k][0]]; const step=f.u==='pz'?1:10;
+    d.extra[k][1]=Math.max(0,Math.round((d.extra[k][1]+dir*step)*10)/10); }
+  else if(t==='a'){ d.portion=Math.max(0.25,Math.round(((d.portion||1)+dir*0.25)*100)/100); }
+  ensureEaten(mealId); save(); render();
+}
+function setAmount(ref,val){
+  const v=parseFloat(String(val).replace(',','.')); const {t,mealId,k}=parseRef(ref);
+  if(isNaN(v)||v<0){ render(); return; }
+  const ds=fmt(dateOf(activeDayIdx)); const d=diaryRec(ds,mealId);
+  if(t==='b') d.items[k]={g:v,removed:false};
+  else if(t==='x') d.extra[k][1]=v;
+  else if(t==='a') d.portion=v;
+  ensureEaten(mealId); save(); render();
+}
+function toggleItem(ref){ const {mealId,k}=parseRef(ref); const d=diaryRec(fmt(dateOf(activeDayIdx)),mealId);
+  const cur=d.items[k]||{}; d.items[k]={...cur,removed:!cur.removed}; save(); render(); }
+function delExtra(ref){ const {mealId,k}=parseRef(ref); const d=diaryRec(fmt(dateOf(activeDayIdx)),mealId);
+  d.extra.splice(k,1); save(); render(); }
 
 /* ---------- TRAIN ---------- */
 function workoutPct(){
@@ -1568,6 +1813,18 @@ function bindDynamic(){
     save(); render();
   };
 
+  // --- diario alimentare: quantità, toggle, extra (real-time) ---
+  main.querySelectorAll('[data-fstep]').forEach(el=>el.onclick=()=>{
+    const i=el.dataset.fstep.lastIndexOf(':'); stepAmount(el.dataset.fstep.slice(0,i), +el.dataset.fstep.slice(i+1));
+  });
+  main.querySelectorAll('[data-fin]').forEach(el=>{
+    el.onchange=()=>setAmount(el.dataset.fin, el.value);
+    el.onclick=e=>e.stopPropagation();
+  });
+  main.querySelectorAll('[data-fitem]').forEach(el=>el.onclick=()=>toggleItem(el.dataset.fitem));
+  main.querySelectorAll('[data-fxdel]').forEach(el=>el.onclick=()=>delExtra(el.dataset.fxdel));
+  main.querySelectorAll('[data-addfood]').forEach(el=>el.onclick=()=>openFoodPicker(el.dataset.addfood));
+
   // --- paywall teaser / upgrade entrypoints ---
   main.querySelectorAll('[data-open-paywall]').forEach(el=>el.onclick=()=>openPaywall());
   const rp=main.querySelector('[data-resetplan]');
@@ -1702,6 +1959,8 @@ document.querySelectorAll('#timerPresets button').forEach(b=>b.onclick=()=>{
 document.getElementById('pwClose').onclick=closePaywall;
 document.getElementById('pwUpgrade').onclick=activatePro;
 document.getElementById('paywall').addEventListener('click',e=>{ if(e.target.id==='paywall') closePaywall(); });
+document.getElementById('fpClose').onclick=closeFoodPicker;
+document.getElementById('foodPicker').addEventListener('click',e=>{ if(e.target.id==='foodPicker') closeFoodPicker(); });
 
 /* ============================================================
    INIT

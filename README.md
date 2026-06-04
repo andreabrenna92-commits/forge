@@ -9,6 +9,8 @@ Dark mode premium, mobile-first, installabile come PWA su iPhone, funziona offli
 - **Cibo** — pasti del giorno con bottone *Sostituisci* (alternative iso-macro). [PRO]
 - **Workout** — schede A/B/C/D con RPE, doppia progressione, timer di recupero, log carichi,
   selettore *Allenamento del giorno* e *Attrezzatura* (Casa/Manubri/Palestra).
+- **Diario alimentare** — modifica i grammi di ogni ingrediente, deseleziona ciò che non hai mangiato,
+  aggiungi alimenti extra dal database; totali Calorie/Proteine/Carboidrati/Grassi (Assunti vs Obiettivo) in tempo reale.
 - **Stats** — peso corporeo con grafico + storico carichi. [PRO]
 - **Profilo** — abbonamento (Trial 7gg / PRO), obiettivo, promemoria notifiche.
 - **Promemoria** — notifiche browser + toast in-app per pasti e allenamento.
