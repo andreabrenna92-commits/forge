@@ -399,47 +399,132 @@ const SCHEDULE = {
 /* ============================================================
    WORKOUTS (migliorati: RPE + doppia progressione)
    ============================================================ */
+/* Ogni esercizio ha 3 varianti per attrezzatura:
+   home = corpo libero/elastici · db = manubri+zaino (default) · gym = palestra.
+   sets/reps/rpe/load sono condivisi; ogni variante può sovrascrivere reps. */
 const WORKOUTS = {
   A:{ title:'Upper Push', focus:'Petto · Spalle · Tricipiti',
     ex:[
-      {n:'Push-up con pausa 2"',         sets:4, reps:'10–15', rpe:'8',   note:'Feet-elevated per aumentare la difficoltà. Pausa di 2" al petto, risalita esplosiva.'},
-      {n:'Military press manubri',        sets:4, reps:'10–12', rpe:'8',  load:true, note:'Esercizio prioritario per le spalle. Schiena neutra, niente arco lombare.'},
-      {n:'Push-up diamante',              sets:3, reps:'12–15', rpe:'9',   note:'Mani a rombo sotto lo sterno. Gomiti vicini al corpo: enfasi tricipiti + petto interno.'},
-      {n:'Dips su sedia',                 sets:3, reps:'12–15', rpe:'8',  load:true, note:'Carico progressivo con zaino. Scendi finché il braccio è parallelo.'},
-      {n:'Alzate laterali manubri',       sets:3, reps:'15',    rpe:'9',  load:true, note:'Movimento lento e controllato, niente slancio. Spalle laterali (deltoide medio).'},
-      {n:'Skull crusher manubri',         sets:3, reps:'12',    rpe:'9',  load:true, note:'Gomiti fermi puntati al soffitto. Solo l\'avambraccio si muove.'},
+      {sets:4, reps:'10–15', rpe:'8',
+        home:{n:'Push-up con pausa 2"', note:'Piedi rialzati (feet-elevated). Pausa 2" al petto, risalita esplosiva.'},
+        db:{n:'Distensioni manubri (panca/pavimento)', note:'Spingi sopra il petto, discesa controllata. Sul pavimento se non hai panca.'},
+        gym:{n:'Panca piana bilanciere / chest press', reps:'8–12', note:'Carico progressivo, scapole retratte. Qui puoi spingere pesante.'} },
+      {sets:4, reps:'10–12', rpe:'8', load:true,
+        home:{n:'Pike push-up', note:'Bacino alto a V, testa verso terra: simula la spinta sopra la testa.'},
+        db:{n:'Military press manubri', note:'Schiena neutra, niente arco lombare.'},
+        gym:{n:'Lento avanti bilanciere / shoulder press', reps:'8–12', note:'Spinta sopra la testa, core attivo.'} },
+      {sets:3, reps:'12–15', rpe:'9',
+        home:{n:'Push-up diamante', note:'Mani a rombo sotto lo sterno, gomiti vicini: tricipiti + petto interno.'},
+        db:{n:'Push-up diamante', note:'Mani a rombo sotto lo sterno, gomiti vicini: tricipiti + petto interno.'},
+        gym:{n:'Dip alle parallele (assistite se serve)', note:'Busto eretto per i tricipiti, inclinato per il petto.'} },
+      {sets:3, reps:'12–15', rpe:'8', load:true,
+        home:{n:'Dips tra due sedie', note:'Scendi finché il braccio è parallelo al pavimento.'},
+        db:{n:'Dips su sedia + zaino', note:'Carico progressivo con lo zaino sulle gambe.'},
+        gym:{n:'Dip alle parallele zavorrate', note:'Aggiungi peso quando superi le 15 reps.'} },
+      {sets:3, reps:'15', rpe:'9', load:true,
+        home:{n:'Alzate laterali con elastico', note:'Movimento lento, niente slancio. Deltoide medio.'},
+        db:{n:'Alzate laterali manubri', note:'Controllato, niente slancio. Deltoide medio.'},
+        gym:{n:'Alzate laterali ai cavi / macchina', note:'Tensione costante su tutto l\'arco.'} },
+      {sets:3, reps:'12', rpe:'9', load:true,
+        home:{n:'French press con elastico', note:'Gomiti fermi, solo l\'avambraccio si muove.'},
+        db:{n:'Skull crusher manubri', note:'Gomiti puntati al soffitto, fermi.'},
+        gym:{n:'Pushdown ai cavi / french press EZ', note:'Tricipiti isolati, allungamento completo.'} },
     ]},
   B:{ title:'Lower Body', focus:'Quadricipiti · Glutei · Femorali',
     ex:[
-      {n:'Squat bulgaro manubri',         sets:4, reps:'10/gamba', rpe:'8', load:true, note:'Il re del lower body a casa. Busto leggermente inclinato per più gluteo.'},
-      {n:'Hip thrust zaino/manubrio',     sets:4, reps:'12–15',    rpe:'8', load:true, note:'Pausa 1" in massima contrazione. Spingi coi talloni, mento retratto.'},
-      {n:'Stacchi rumeni manubri',        sets:3, reps:'12',       rpe:'8', load:true, note:'Schiena neutra sempre. Allunga i femorali, ginocchia morbide.'},
-      {n:'Affondi camminati',             sets:3, reps:'10/gamba', rpe:'8',           note:'Passo lungo, ginocchio posteriore quasi a terra.'},
-      {n:'Squat sumo manubrio',           sets:3, reps:'15',       rpe:'9', load:true, note:'Piedi larghi, punte aperte. Adduttori + gluteo.'},
-      {n:'Calf raise monopodalico',       sets:4, reps:'15–20',    rpe:'9',           note:'Su scalino per ROM completo. Pausa 1" in alto, scendi lento.'},
+      {sets:4, reps:'10/gamba', rpe:'8', load:true,
+        home:{n:'Squat bulgaro (corpo libero)', note:'Busto leggermente inclinato per più gluteo.'},
+        db:{n:'Squat bulgaro manubri', note:'Il re del lower body a casa.'},
+        gym:{n:'Bulgaro con bilanciere / pressa unilaterale', note:'Carico maggiore, stesso pattern.'} },
+      {sets:4, reps:'12–15', rpe:'8', load:true,
+        home:{n:'Hip thrust monopodalico', note:'Pausa 1" in contrazione, spingi coi talloni.'},
+        db:{n:'Hip thrust zaino/manubrio', note:'Pausa 1" in alto, mento retratto.'},
+        gym:{n:'Hip thrust bilanciere / macchina', reps:'8–12', note:'Carico pesante, pausa in alto.'} },
+      {sets:3, reps:'12', rpe:'8', load:true,
+        home:{n:'Stacco rumeno monopodalico', note:'Schiena neutra, allunga i femorali.'},
+        db:{n:'Stacchi rumeni manubri', note:'Ginocchia morbide, schiena neutra.'},
+        gym:{n:'Stacco rumeno bilanciere / leg curl', reps:'10–12', note:'Allungamento dei femorali sotto carico.'} },
+      {sets:3, reps:'10/gamba', rpe:'8',
+        home:{n:'Affondi camminati', note:'Passo lungo, ginocchio posteriore quasi a terra.'},
+        db:{n:'Affondi camminati manubri', note:'Passo lungo, busto eretto.'},
+        gym:{n:'Affondi manubri / pressa', note:'Controlla la discesa.'} },
+      {sets:3, reps:'15', rpe:'9', load:true,
+        home:{n:'Squat sumo (corpo libero/zaino)', note:'Punte aperte: adduttori + gluteo.'},
+        db:{n:'Squat sumo manubrio', note:'Piedi larghi, punte aperte.'},
+        gym:{n:'Pressa stance largo / hack squat', note:'Quadricipiti e adduttori.'} },
+      {sets:4, reps:'15–20', rpe:'9',
+        home:{n:'Calf raise monopodalico su scalino', note:'Pausa 1" in alto, scendi lento per il ROM.'},
+        db:{n:'Calf raise monopodalico + zaino', note:'Pausa 1" in alto, ROM completo.'},
+        gym:{n:'Calf raise macchina / pressa', reps:'12–15', note:'Carico alto, pausa in allungamento.'} },
     ]},
   C:{ title:'Upper Pull + Core', focus:'Schiena · Bicipiti · Addome',
     ex:[
-      {n:'Rematore manubrio 1 braccio',   sets:4, reps:'10–12/lato', rpe:'8', load:true, note:'Tira col gomito, contrazione scapolare a fine movimento. Niente torsione.'},
-      {n:'Rematore manubri pendlay',      sets:3, reps:'10',         rpe:'8', load:true, note:'Esplosivo in salita, lento in discesa. Busto a 90°.'},
-      {n:'Face pull elastico / rear delt',sets:3, reps:'15',         rpe:'9',           note:'Tira verso la fronte aprendo i gomiti. Salute della spalla + postura.'},
-      {n:'Curl manubri alternati',        sets:3, reps:'12',         rpe:'9', load:true, note:'Supinazione completa in alto. Gomito fermo.'},
-      {n:'Curl a martello',               sets:3, reps:'12',         rpe:'9', load:true, note:'Presa neutra. Brachiale + avambracci per braccia più spesse.'},
-      {n:'Ab wheel / V-sit',              sets:4, reps:'10–12',      rpe:'8',           note:'Core tight, non inarcare la schiena. Se troppo duro: plank dinamico.'},
-      {n:'Plank laterale',                sets:3, reps:'40s/lato',   rpe:'-',           note:'Anche alta, corpo in linea. Obliqui + stabilità.'},
+      {sets:4, reps:'10–12/lato', rpe:'8', load:true,
+        home:{n:'Rematore con elastico 1 braccio', note:'Tira col gomito, contrai la scapola.'},
+        db:{n:'Rematore manubrio 1 braccio', note:'Contrazione scapolare a fine movimento, niente torsione.'},
+        gym:{n:'Pulley basso / rematore macchina unilat.', note:'Tira al fianco, petto in fuori.'} },
+      {sets:3, reps:'10', rpe:'8', load:true,
+        home:{n:'Australian pull-up (sotto un tavolo)', note:'Corpo rigido, tira il petto verso il bordo.'},
+        db:{n:'Rematore manubri pendlay', note:'Esplosivo in salita, lento in discesa. Busto a 90°.'},
+        gym:{n:'Lat machine / rematore bilanciere', reps:'8–12', note:'Schiena larga: presa media-larga.'} },
+      {sets:3, reps:'15', rpe:'9',
+        home:{n:'Face pull con elastico', note:'Tira verso la fronte aprendo i gomiti.'},
+        db:{n:'Rear delt fly manubri', note:'Busto inclinato, apri lento, non swingare.'},
+        gym:{n:'Face pull ai cavi', note:'Postura + spalla posteriore.'} },
+      {sets:3, reps:'12', rpe:'9', load:true,
+        home:{n:'Curl con elastico', note:'Supinazione completa, gomito fermo.'},
+        db:{n:'Curl manubri alternati', note:'Supinazione completa in alto, gomito fermo.'},
+        gym:{n:'Curl bilanciere EZ / ai cavi', note:'Tensione costante, niente slancio.'} },
+      {sets:3, reps:'12', rpe:'9', load:true,
+        home:{n:'Curl martello con elastico', note:'Presa neutra: brachiale + avambracci.'},
+        db:{n:'Curl a martello', note:'Presa neutra per braccia più spesse.'},
+        gym:{n:'Curl martello / corda al cavo', note:'Presa neutra, controllo.'} },
+      {sets:4, reps:'10–12', rpe:'8',
+        home:{n:'V-sit / plank dinamico', note:'Core tight, non inarcare la schiena.'},
+        db:{n:'Ab wheel / V-sit', note:'Core tight; se troppo duro, plank dinamico.'},
+        gym:{n:'Crunch ai cavi / ab machine', reps:'12–15', note:'Carico progressivo sull\'addome.'} },
+      {sets:3, reps:'40s/lato', rpe:'-',
+        home:{n:'Plank laterale', note:'Anca alta, corpo in linea. Obliqui + stabilità.'},
+        db:{n:'Plank laterale', note:'Anca alta, corpo in linea. Obliqui + stabilità.'},
+        gym:{n:'Plank laterale (o pallof press cavo)', note:'Anti-rotazione del core.'} },
     ]},
   D:{ title:'Upper Hypertrophy', focus:'Frame Builder — petto/dorso/spalle',
     ex:[
-      {n:'Push-up archer',                sets:4, reps:'8/lato',  rpe:'8',           note:'Un braccio lavora, l\'altro stabilizza. Verso il push-up a un braccio.'},
-      {n:'Rematore manubri prono largo',  sets:4, reps:'12',      rpe:'8', load:true, note:'Gomiti larghi → enfasi upper back, spalle più ampie.'},
-      {n:'Military press manubri seduto', sets:3, reps:'10–12',   rpe:'8', load:true, note:'Carico progressivo ogni settimana. Schiena supportata.'},
-      {n:'Rear delt fly',                 sets:4, reps:'15',      rpe:'9', load:true, note:'Lento e controllato, non swingare. Deltoide posteriore = spalle 3D.'},
-      {n:'Push-up decline con pausa',     sets:3, reps:'10–12',   rpe:'9',           note:'Piedi elevati, pausa 2" in basso. Petto alto.'},
-      {n:'Curl inclinato manubri',        sets:3, reps:'12',      rpe:'9', load:true, note:'Su panca/sedia inclinata: massimo allungamento del bicipite.'},
-      {n:'Overhead tricep extension',     sets:3, reps:'12',      rpe:'9', load:true, note:'Capo lungo del tricipite. Gomiti vicini alla testa.'},
-      {n:'Band pull-apart',               sets:3, reps:'20',      rpe:'8',           note:'Finisher posturale. Scapole che si avvicinano.'},
+      {sets:4, reps:'8/lato', rpe:'8',
+        home:{n:'Push-up archer', note:'Un braccio lavora, l\'altro stabilizza.'},
+        db:{n:'Push-up archer', note:'Un braccio lavora, l\'altro stabilizza.'},
+        gym:{n:'Chest press unilaterale / croci ai cavi', reps:'10–12', note:'Strizza il petto a fine corsa.'} },
+      {sets:4, reps:'12', rpe:'8', load:true,
+        home:{n:'Rematore elastico largo', note:'Gomiti larghi → upper back, spalle più ampie.'},
+        db:{n:'Rematore manubri prono largo', note:'Gomiti larghi → enfasi upper back.'},
+        gym:{n:'Rematore largo macchina / lat presa larga', note:'Spalle più larghe.'} },
+      {sets:3, reps:'10–12', rpe:'8', load:true,
+        home:{n:'Pike push-up', note:'Spinta verticale, testa verso terra.'},
+        db:{n:'Military press manubri seduto', note:'Carico progressivo, schiena supportata.'},
+        gym:{n:'Shoulder press machine / lento avanti', note:'Spinta controllata sopra la testa.'} },
+      {sets:4, reps:'15', rpe:'9', load:true,
+        home:{n:'Rear delt con elastico', note:'Lento, non swingare. Deltoide posteriore.'},
+        db:{n:'Rear delt fly manubri', note:'Lento e controllato: spalle 3D.'},
+        gym:{n:'Reverse pec-deck / rear delt ai cavi', note:'Tensione costante sul posteriore.'} },
+      {sets:3, reps:'10–12', rpe:'9',
+        home:{n:'Push-up decline con pausa', note:'Piedi elevati, pausa 2" in basso. Petto alto.'},
+        db:{n:'Push-up decline con pausa', note:'Piedi elevati, pausa 2" in basso. Petto alto.'},
+        gym:{n:'Panca inclinata bilanciere / chest press incl.', reps:'8–12', note:'Petto alto sotto carico.'} },
+      {sets:3, reps:'12', rpe:'9', load:true,
+        home:{n:'Curl inclinato con elastico', note:'Massimo allungamento del bicipite.'},
+        db:{n:'Curl inclinato manubri', note:'Su panca/sedia inclinata: allungamento massimo.'},
+        gym:{n:'Curl inclinato manubri / panca Scott', note:'Picco di tensione in allungamento.'} },
+      {sets:3, reps:'12', rpe:'9', load:true,
+        home:{n:'Estensioni tricipiti sopra la testa (elastico)', note:'Capo lungo del tricipite.'},
+        db:{n:'Overhead tricep extension manubrio', note:'Gomiti vicini alla testa, allungamento.'},
+        gym:{n:'Overhead extension ai cavi / pushdown', note:'Capo lungo, tensione costante.'} },
+      {sets:3, reps:'20', rpe:'8',
+        home:{n:'Band pull-apart', note:'Scapole che si avvicinano. Finisher posturale.'},
+        db:{n:'Band pull-apart', note:'Scapole che si avvicinano. Finisher posturale.'},
+        gym:{n:'Reverse fly ai cavi / band pull-apart', note:'Finisher per il posteriore.'} },
     ]},
 };
+const EQUIP_LABEL={home:'Casa',db:'Manubri',gym:'Palestra'};
 
 /* ============================================================
    MEALS (con alternative iso-macro per "Sostituisci")
@@ -460,14 +545,18 @@ const MEALS = {
     {id:'m2',slot:'Pranzo',name:'Pollo + riso basmati',items:'180g petto pollo grigliato + 200g riso + zucchine + EVO',kcal:620,pro:45,
       alts:[{name:'Tacchino + riso',items:'180g fesa tacchino + 200g riso basmati + zucchine + EVO',kcal:620,pro:46},
             {name:'Tofu/seitan + riso',items:'200g tofu/seitan saltato + 200g riso + zucchine + EVO',kcal:620,pro:40},
-            {name:'Huel + riso',items:'2 misurini Huel + 150g riso a parte + verdure',kcal:620,pro:44}]},
+            {name:'Huel + riso',items:'2 misurini Huel + 150g riso a parte + verdure',kcal:620,pro:44},
+            {name:'Gamberi + riso',items:'200g gamberi saltati + 200g riso + zucchine + EVO',kcal:620,pro:42},
+            {name:'Poke bowl pollo',items:'160g pollo + 180g riso + edamame + avocado ¼ + soia',kcal:620,pro:44}]},
     {id:'m3',slot:'Spuntino',name:'Yogurt greco + mandorle',items:'200g yogurt greco 0% + 20g mandorle + 1 cucchiaio miele',kcal:280,pro:22,
       alts:[{name:'Skyr + noci',items:'200g skyr + 15g noci + miele',kcal:280,pro:24},
             {name:'Whey + frutta secca',items:'1 scoop whey + 200ml acqua + 20g mandorle',kcal:280,pro:28}]},
     {id:'m4',slot:'Cena',name:'Salmone + patate dolci',items:'180g salmone forno + 150g patate dolci + insalata + EVO + limone',kcal:550,pro:38,
       alts:[{name:'Branzino + patate dolci',items:'180g branzino + 150g patate dolci + insalata + EVO',kcal:550,pro:38},
             {name:'Trota + patate dolci',items:'180g trota al forno + 150g patate dolci + insalata',kcal:550,pro:40},
-            {name:'Manzo + patate',items:'170g fettine manzo magro + 150g patate + insalata',kcal:550,pro:42}]},
+            {name:'Manzo + patate',items:'170g fettine manzo magro + 150g patate + insalata',kcal:550,pro:42},
+            {name:'Pollo + patate dolci',items:'160g pollo + 150g patate dolci + insalata + EVO',kcal:550,pro:44},
+            {name:'Frittata + patate',items:'4 uova + 30g grana + 150g patate dolci + insalata',kcal:550,pro:36}]},
     {id:'m5',slot:'Pre-nanna',name:'Ricotta + cacao',items:'200g ricotta magra + 1 cucchiaio cacao amaro',kcal:220,pro:18,
       alts:[{name:'Caseine',items:'1 scoop caseine + 250ml acqua/latte',kcal:220,pro:24},
             {name:'Yogurt greco',items:'200g yogurt greco 0% + cannella',kcal:200,pro:18}]},
@@ -476,13 +565,17 @@ const MEALS = {
     {id:'m1',slot:'Colazione',name:'Huel Black',items:'2 misurini + 300ml acqua',kcal:400,pro:40,alts:M.huelBase.alts},
     {id:'m2',slot:'Pranzo',name:'Uova + salmone affumicato',items:'3 uova strapazzate + 100g salmone affumicato + 2 fette pane integrale + pomodori',kcal:520,pro:42,
       alts:[{name:'Frittata + tonno',items:'3 uova + 100g tonno + 2 fette pane integrale + pomodori',kcal:520,pro:44},
-            {name:'Tacchino + uova',items:'2 uova + 120g tacchino arrosto + 2 fette pane integrale',kcal:520,pro:46}]},
+            {name:'Tacchino + uova',items:'2 uova + 120g tacchino arrosto + 2 fette pane integrale',kcal:520,pro:46},
+            {name:'Bresaola + grana',items:'90g bresaola + 30g grana + 2 fette pane integrale + rucola',kcal:520,pro:44},
+            {name:'Pollo + hummus wrap',items:'150g pollo + piadina integrale + hummus + insalata',kcal:520,pro:42}]},
     {id:'m3',slot:'Spuntino',name:'Whey + mela',items:'1 scoop whey + acqua + 1 mela',kcal:200,pro:25,
       alts:[{name:'Yogurt greco + frutta',items:'200g yogurt greco 0% + 1 mela',kcal:200,pro:20},
             {name:'Skyr',items:'200g skyr + cannella',kcal:200,pro:24}]},
     {id:'m4',slot:'Cena',name:'Merluzzo + riso integrale',items:'200g merluzzo vapore + 120g riso integrale + broccoli + EVO',kcal:480,pro:44,
       alts:[{name:'Nasello + riso',items:'200g nasello + 120g riso integrale + broccoli + EVO',kcal:480,pro:44},
-            {name:'Pollo + riso',items:'150g pollo + 120g riso integrale + broccoli + EVO',kcal:480,pro:46}]},
+            {name:'Pollo + riso',items:'150g pollo + 120g riso integrale + broccoli + EVO',kcal:480,pro:46},
+            {name:'Gamberi + riso',items:'200g gamberi + 120g riso integrale + broccoli + EVO',kcal:480,pro:42},
+            {name:'Tofu + riso',items:'200g tofu + 120g riso integrale + broccoli + soia',kcal:480,pro:36}]},
     {id:'m5',slot:'Pre-nanna',name:'Yogurt greco + noci',items:'200g yogurt greco + 15g noci',kcal:220,pro:18,alts:M.mon?[]:[]},
   ],
   wed:[
@@ -492,13 +585,17 @@ const MEALS = {
     {id:'m2',slot:'Pranzo',name:'Tonno + pasta integrale',items:'180g tonno naturale + 200g pasta integrale + pomodoro + basilico + EVO',kcal:620,pro:46,
       alts:[{name:'Pollo + pasta',items:'160g pollo + 200g pasta integrale + pomodoro + EVO',kcal:620,pro:46},
             {name:'Sgombro + pasta',items:'150g sgombro + 200g pasta integrale + pomodoro',kcal:620,pro:44},
-            {name:'Ceci + pasta',items:'200g ceci + 180g pasta integrale + pomodoro + EVO',kcal:620,pro:34}]},
+            {name:'Ceci + pasta',items:'200g ceci + 180g pasta integrale + pomodoro + EVO',kcal:620,pro:34},
+            {name:'Salmone + pasta',items:'150g salmone + 200g pasta integrale + zucchine + EVO',kcal:620,pro:42},
+            {name:'Ragù di tacchino + pasta',items:'180g macinato tacchino + 200g pasta + pomodoro',kcal:620,pro:48}]},
     {id:'m3',slot:'Spuntino',name:'Barretta proteica + arancia',items:'1 barretta (>20g pro) + 1 arancia',kcal:250,pro:22,
       alts:[{name:'Whey + frutta',items:'1 scoop whey + 1 arancia + 10g mandorle',kcal:250,pro:26},
             {name:'Yogurt + miele',items:'200g yogurt greco + miele + 1 arancia',kcal:250,pro:20}]},
     {id:'m4',slot:'Cena',name:'Manzo + verdure grigliate',items:'200g manzo magro fettine + peperoni/melanzane/zucchine + 100g patate lesse',kcal:540,pro:42,
       alts:[{name:'Tacchino + verdure',items:'200g tacchino + verdure grigliate + 100g patate',kcal:540,pro:46},
-            {name:'Pollo + verdure',items:'200g pollo + verdure grigliate + 100g patate',kcal:540,pro:48}]},
+            {name:'Pollo + verdure',items:'200g pollo + verdure grigliate + 100g patate',kcal:540,pro:48},
+            {name:'Salmone + verdure',items:'180g salmone + verdure grigliate + 100g patate',kcal:540,pro:38},
+            {name:'Hamburger magro + verdure',items:'2 burger manzo magro (180g) + verdure + 100g patate',kcal:540,pro:44}]},
     {id:'m5',slot:'Pre-nanna',name:'Ricotta + cannella',items:'200g ricotta + cannella + 1 cucchiaino miele',kcal:220,pro:18,
       alts:[{name:'Caseine',items:'1 scoop caseine + 250ml acqua',kcal:220,pro:24}]},
   ],
@@ -506,12 +603,16 @@ const MEALS = {
     {id:'m1',slot:'Colazione',name:'Huel Black',items:'2 misurini + 300ml acqua',kcal:400,pro:40,alts:M.huelBase.alts},
     {id:'m2',slot:'Pranzo',name:'Tacchino + quinoa',items:'150g petto tacchino + 180g quinoa + spinaci saltati aglio + EVO',kcal:560,pro:44,
       alts:[{name:'Pollo + quinoa',items:'150g pollo + 180g quinoa + spinaci + EVO',kcal:560,pro:46},
-            {name:'Salmone + quinoa',items:'150g salmone + 160g quinoa + spinaci + EVO',kcal:560,pro:40}]},
+            {name:'Salmone + quinoa',items:'150g salmone + 160g quinoa + spinaci + EVO',kcal:560,pro:40},
+            {name:'Gamberi + quinoa',items:'180g gamberi + 180g quinoa + spinaci + EVO',kcal:560,pro:42},
+            {name:'Tempeh + quinoa',items:'180g tempeh + 180g quinoa + spinaci + EVO',kcal:560,pro:38}]},
     {id:'m3',slot:'Spuntino',name:'Yogurt greco + noci + pera',items:'200g yogurt greco + 20g noci + 1 pera',kcal:280,pro:20,
       alts:[{name:'Skyr + frutta secca',items:'200g skyr + 20g mandorle + 1 pera',kcal:280,pro:24}]},
     {id:'m4',slot:'Cena',name:'Uova + lenticchie',items:'4 uova in camicia + 150g lenticchie + pomodori + EVO',kcal:480,pro:38,
       alts:[{name:'Pollo + lenticchie',items:'150g pollo + 150g lenticchie + pomodori + EVO',kcal:480,pro:44},
-            {name:'Tonno + fagioli',items:'160g tonno + 150g fagioli cannellini + pomodori',kcal:480,pro:42}]},
+            {name:'Tonno + fagioli',items:'160g tonno + 150g fagioli cannellini + pomodori',kcal:480,pro:42},
+            {name:'Salmone + lenticchie',items:'150g salmone + 150g lenticchie + pomodori + EVO',kcal:480,pro:40},
+            {name:'Tacchino + lenticchie',items:'150g tacchino + 150g lenticchie + spinaci + EVO',kcal:480,pro:46}]},
     {id:'m5',slot:'Pre-nanna',name:'Caseine o ricotta',items:'1 scoop caseine o 200g ricotta magra',kcal:200,pro:24,
       alts:[{name:'Yogurt greco',items:'200g yogurt greco 0% + cannella',kcal:200,pro:18}]},
   ],
@@ -521,12 +622,16 @@ const MEALS = {
             {name:'Uova + avocado toast',items:'3 uova + 2 fette pane + ½ avocado + banana',kcal:650,pro:36}]},
     {id:'m2',slot:'Pranzo',name:'Pollo + riso + avocado',items:'180g pollo + 200g riso basmati + insalata + ½ avocado',kcal:640,pro:46,
       alts:[{name:'Tacchino + riso',items:'180g tacchino + 200g riso + insalata + ½ avocado',kcal:640,pro:46},
-            {name:'Gamberi + riso',items:'200g gamberi + 200g riso + insalata + avocado',kcal:640,pro:42}]},
+            {name:'Gamberi + riso',items:'200g gamberi + 200g riso + insalata + avocado',kcal:640,pro:42},
+            {name:'Manzo + riso',items:'170g manzo magro + 200g riso + insalata + ½ avocado',kcal:640,pro:46},
+            {name:'Burrito bowl pollo',items:'160g pollo + 180g riso + fagioli neri + mais + avocado',kcal:640,pro:44}]},
     {id:'m3',slot:'Spuntino',name:'Whey + mandorle',items:'1 scoop whey + 30g mandorle',kcal:280,pro:28,
       alts:[{name:'Yogurt greco + noci',items:'200g yogurt greco + 25g noci',kcal:280,pro:22}]},
     {id:'m4',slot:'Cena',name:'Branzino + patate dolci',items:'200g branzino forno + 150g patate dolci + asparagi + EVO',kcal:520,pro:40,
       alts:[{name:'Orata + patate dolci',items:'200g orata + 150g patate dolci + asparagi + EVO',kcal:520,pro:40},
-            {name:'Salmone + patate dolci',items:'180g salmone + 150g patate dolci + asparagi',kcal:520,pro:38}]},
+            {name:'Salmone + patate dolci',items:'180g salmone + 150g patate dolci + asparagi',kcal:520,pro:38},
+            {name:'Merluzzo + patate dolci',items:'200g merluzzo + 150g patate dolci + asparagi + EVO',kcal:520,pro:42},
+            {name:'Pollo + patate dolci',items:'160g pollo + 150g patate dolci + asparagi + EVO',kcal:520,pro:44}]},
     {id:'m5',slot:'Pre-nanna',name:'Ricotta + cacao',items:'200g ricotta magra + cacao amaro',kcal:220,pro:18,
       alts:[{name:'Caseine',items:'1 scoop caseine + 250ml acqua',kcal:220,pro:24}]},
   ],
@@ -537,19 +642,25 @@ const MEALS = {
       alts:[{name:'Skyr',items:'200g skyr + frutta fresca',kcal:200,pro:22}]},
     {id:'m4',slot:'Cena',name:'Salmone + riso + verdure',items:'180g salmone + verdure miste + 100g riso',kcal:480,pro:38,
       alts:[{name:'Pollo + riso',items:'160g pollo + verdure + 100g riso',kcal:480,pro:44},
-            {name:'Tonno + riso',items:'160g tonno + verdure + 100g riso',kcal:480,pro:42}]},
+            {name:'Tonno + riso',items:'160g tonno + verdure + 100g riso',kcal:480,pro:42},
+            {name:'Gamberi + riso',items:'180g gamberi + verdure + 100g riso',kcal:480,pro:40},
+            {name:'Tacchino + riso',items:'160g tacchino + verdure + 100g riso',kcal:480,pro:46}]},
   ],
   sun:[
     {id:'m1',slot:'Colazione',name:'Huel + frutti di bosco',items:'2 misurini + 300ml latte avena + frutti di bosco',kcal:500,pro:42,
       alts:[{name:'Porridge',items:'60g avena + 1 scoop whey + latte avena + frutti di bosco',kcal:500,pro:40}]},
     {id:'m2',slot:'Pranzo',name:'Pollo arrosto + patate',items:'200g pollo arrosto (petto+coscia) + 150g patate forno + insalata + EVO',kcal:620,pro:48,
       alts:[{name:'Tacchino arrosto',items:'200g tacchino + 150g patate forno + insalata + EVO',kcal:620,pro:48},
-            {name:'Coniglio/arrosto magro',items:'200g carne bianca + 150g patate + insalata',kcal:620,pro:46}]},
+            {name:'Coniglio/arrosto magro',items:'200g carne bianca + 150g patate + insalata',kcal:620,pro:46},
+            {name:'Salmone al forno',items:'200g salmone + 150g patate forno + insalata + EVO',kcal:620,pro:42},
+            {name:'Roast beef + patate',items:'180g roast beef + 150g patate forno + insalata',kcal:620,pro:48}]},
     {id:'m3',slot:'Spuntino',name:'Noci + frutto',items:'30g noci + 1 frutto',kcal:200,pro:5,
       alts:[{name:'Yogurt greco',items:'200g yogurt greco 0% + 1 frutto',kcal:200,pro:18}]},
     {id:'m4',slot:'Cena',name:'Uova + ceci',items:'3 uova + 150g ceci + spinaci + EVO + limone',kcal:460,pro:34,
       alts:[{name:'Pollo + ceci',items:'130g pollo + 150g ceci + spinaci + EVO',kcal:460,pro:40},
-            {name:'Tonno + ceci',items:'150g tonno + 150g ceci + spinaci + limone',kcal:460,pro:42}]},
+            {name:'Tonno + ceci',items:'150g tonno + 150g ceci + spinaci + limone',kcal:460,pro:42},
+            {name:'Gamberi + ceci',items:'160g gamberi + 150g ceci + spinaci + EVO',kcal:460,pro:38},
+            {name:'Feta + ceci (veg)',items:'80g feta + 150g ceci + spinaci + pomodori + EVO',kcal:460,pro:30}]},
     {id:'m5',slot:'Pre-nanna',name:'Yogurt greco + cannella',items:'200g yogurt greco + cannella',kcal:180,pro:18,
       alts:[{name:'Ricotta',items:'180g ricotta magra + cannella',kcal:180,pro:16}]},
   ],
@@ -572,6 +683,7 @@ function load(){
   if(!s.loads) s.loads={};
   if(!s.weights) s.weights=[];
   if(!s.checks) s.checks={};
+  if(!s.equip) s.equip='db';   // attrezzatura: home | db | gym
   return s;
 }
 function blank(){ return {checks:{}, swaps:{}, weights:[], loads:{}, overrides:{}}; }
@@ -814,9 +926,11 @@ function viewTrain(){
       </div></div>`;
   }
   const r=rec(fmt(dateOf(activeDayIdx)));
+  const mode=state.equip;
   return `<div class="view">
     <div class="section-head"><h2>${w.title}</h2><span class="pill">${w.focus}</span></div>
     ${picker}
+    ${equipPicker()}
 
     <div class="banner">
       <i data-lucide="trending-up"></i>
@@ -827,24 +941,26 @@ function viewTrain(){
     <div class="card">
       <div class="wprog"><div class="track fill-volt"><span style="width:${workoutPct()}%"></span></div><div class="pct">${workoutPct()}%</div></div>
       ${w.ex.map((e,ei)=>{
-        const last=(state.loads[e.n]||[]).slice(-1)[0];
+        const v=e[mode]||e.db;
+        const exName=v.n, note=v.note, reps=v.reps||e.reps;
+        const last=(state.loads[exName]||[]).slice(-1)[0];
         return `<div class="exercise">
           <div class="ex-head">
             <div class="ex-num">${String(ei+1).padStart(2,'0')}</div>
             <div class="ex-title">
-              <div class="n">${e.n}</div>
+              <div class="n">${exName}</div>
               <div class="meta">
-                <span class="chipx">${e.sets} × ${e.reps}</span>
+                <span class="chipx">${e.sets} × ${reps}</span>
                 ${e.rpe!=='-'?`<span class="chipx rpe">RPE ${e.rpe}</span>`:''}
               </div>
             </div>
           </div>
-          <div class="ex-note">${e.note}</div>
+          <div class="ex-note">${note}</div>
           <div class="sets">
             ${Array.from({length:e.sets}).map((_,s)=>`<button class="setbtn ${r.sets[wid+'_'+ei+'_'+s]?'done':''}" data-set="${wid+'_'+ei+'_'+s}">${s+1}</button>`).join('')}
           </div>
           <div class="timer-mini"><button data-timer="90"><i data-lucide="timer"></i> Recupero 90s</button></div>
-          ${e.load?`<div class="loadlog" data-ex="${encodeURIComponent(e.n)}">
+          ${e.load?`<div class="loadlog" data-ex="${encodeURIComponent(exName)}">
             <input type="number" inputmode="decimal" placeholder="kg" class="li-w">
             <span class="x">×</span>
             <input type="number" inputmode="numeric" placeholder="reps" class="li-r">
@@ -855,6 +971,21 @@ function viewTrain(){
       }).join('')}
     </div>
     <p class="tip">Tocca i numeri delle serie per spuntarle. Il timer parte in overlay a tutto schermo.</p>
+  </div>`;
+}
+
+function equipPicker(){
+  const m=state.equip;
+  return `<div class="wpick">
+    <div class="wpick-head">
+      <span class="wp-l">Attrezzatura</span>
+      <span class="wp-hint">cambia le varianti</span>
+    </div>
+    <div class="wpick-row">
+      <button class="wp-chip ${m==='home'?'on':''}" data-equip="home"><i data-lucide="home"></i> Casa</button>
+      <button class="wp-chip ${m==='db'?'on':''}" data-equip="db"><i data-lucide="dumbbell"></i> Manubri</button>
+      <button class="wp-chip ${m==='gym'?'on':''}" data-equip="gym"><i data-lucide="building-2"></i> Palestra</button>
+    </div>
   </div>`;
 }
 
@@ -965,6 +1096,10 @@ function bindDynamic(){
   });
   const wr=main.querySelector('[data-wreset]');
   if(wr)wr.onclick=()=>{ delete state.overrides[fmt(dateOf(activeDayIdx))]; save(); render(); };
+  // selettore attrezzatura (Casa/Manubri/Palestra)
+  main.querySelectorAll('[data-equip]').forEach(el=>el.onclick=()=>{
+    state.equip=el.dataset.equip; save(); render();
+  });
   // goto train from today
   const gt=document.getElementById('gotoTrain');
   if(gt)gt.onclick=()=>{setTab('train');};
