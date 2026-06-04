@@ -1,7 +1,7 @@
 {
-  "name": "FORGE — Diet & Training",
-  "short_name": "FORGE",
-  "description": "Piano alimentare e allenamento personale con timer, tracker e progressione.",
+  "name": "FITNOMAD — Smart Diet & Training",
+  "short_name": "FITNOMAD",
+  "description": "Diario alimentare e allenamento smart: obiettivi personalizzati, promemoria, timer, tracker e progressione.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
