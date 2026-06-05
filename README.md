@@ -14,8 +14,13 @@ Dark mode premium, mobile-first, installabile come PWA su iPhone, funziona offli
 - **Stats** — peso corporeo con grafico + storico carichi. [PRO]
 - **Profilo** — abbonamento (Trial 7gg / PRO), obiettivo, promemoria notifiche.
 - **Promemoria** — notifiche browser + toast in-app per pasti e allenamento.
-- **Monetizzazione** — Trial 7 giorni → paywall PRO (pronto per Stripe/PayPal).
-- Persistenza completa in `localStorage`.
+- **Monetizzazione** — Trial 7 giorni → paywall PRO (mensile/annuale, urgenza), pronto per Stripe/PayPal.
+- **Calcolo TDEE** (Mifflin-St Jeor) da sesso/età/altezza/peso/attività + split macro personalizzabile.
+- **8 nutrienti** — kcal, proteine, carbo, grassi, fibre, zuccheri, saturi, sale.
+- **Carb cycling** — più kcal/carbo nei giorni di allenamento, meno nei riposo.
+- **Acqua, streak, badge, foto progressi, misure, storico nutrizionale, media mobile peso.**
+- **Tema chiaro/scuro, backup export/import, report settimanale condivisibile.**
+- Persistenza completa in `localStorage` con pruning automatico (~120 giorni).
 
 ## Uso locale
 Apri `index.html` nel browser. Per installazione/offline serve un host HTTPS (vedi sotto).
