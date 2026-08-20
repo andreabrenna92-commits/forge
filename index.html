@@ -538,6 +538,8 @@ nav.tabs button.active svg{filter:drop-shadow(0 0 8px rgba(204,255,0,.5));}
   border:1px solid var(--border);text-align:left;}
 .fp-item:active{transform:scale(.99);border-color:var(--volt);}
 .tag-main{font-size:8.5px;font-weight:800;letter-spacing:.06em;color:#0b0c0e;background:var(--volt);padding:1px 5px;border-radius:4px;vertical-align:middle;margin-left:4px;}
+.lr-e1{font-size:10px;color:var(--volt);}
+.loadrow .lr-n{line-height:1.3;}
 .fp-search{display:flex;align-items:center;gap:8px;background:var(--surface-2);border:1px solid var(--border);border-radius:11px;padding:10px 12px;margin:6px 0 4px;}
 .fp-search svg{width:16px;height:16px;color:var(--muted);flex:0 0 auto;}
 .fp-search input{flex:1;background:none;border:none;color:var(--text);font-size:14px;}
@@ -791,17 +793,16 @@ const DAYS = ['mon','tue','wed','thu','fri','sat','sun'];
 const DAY_LABEL = {mon:'Lun',tue:'Mar',wed:'Mer',thu:'Gio',fri:'Ven',sat:'Sab',sun:'Dom'};
 const DAY_FULL  = {mon:'Lunedì',tue:'Martedì',wed:'Mercoledì',thu:'Giovedì',fri:'Venerdì',sat:'Sabato',sun:'Domenica'};
 
-const SCHEDULE = {
-  mon:'A', tue:null, wed:'B', thu:null, fri:'C', sat:'D', sun:null
-};
+const SCHEDULE_UPPER = { mon:'A', tue:null, wed:'B', thu:null, fri:'C', sat:'D', sun:null };
+const SCHEDULE_FB    = { mon:'FA', tue:null, wed:'FB', thu:null, fri:'FC', sat:null, sun:null };
 
 /* ============================================================
    WORKOUTS (migliorati: RPE + doppia progressione)
    ============================================================ */
 /* Ogni esercizio ha 3 varianti per attrezzatura:
-   home = corpo libero/elastici · db = manubri+zaino (default) · gym = palestra.
+   home = corpo libero/elastici (ideale in VIAGGIO) · db = manubri+zaino · gym = palestra.
    sets/reps/rpe/load sono condivisi; ogni variante può sovrascrivere reps. */
-const WORKOUTS = {
+const WORKOUTS_UPPER = {
   A:{ title:'Upper Push', focus:'Petto · Spalle · Tricipiti',
     ex:[
       {sets:4, reps:'10–15', rpe:'8',
@@ -923,6 +924,94 @@ const WORKOUTS = {
         gym:{n:'Reverse fly ai cavi / band pull-apart', note:'Finisher per il posteriore.'} },
     ]},
 };
+
+/* ============================================================
+   FULL-BODY 3× — programma ipertrofia (frequenza 2-3x/muscolo)
+   Primi 2 esercizi = fondamentali (BASE). home = versione da viaggio.
+   ============================================================ */
+const WORKOUTS_FB = {
+  FA:{ title:'Full-Body A', focus:'Gambe · Petto · Dorso',
+    ex:[
+      {sets:3, reps:'8–12', rpe:'8', load:true,
+        home:{n:'Squat bulgaro (corpo libero)', note:'Busto leggermente avanti, ROM pieno. Progressione: +reps o +tempo.'},
+        db:{n:'Squat goblet manubrio', note:'Manubrio al petto, scendi sotto il parallelo.'},
+        gym:{n:'Squat a macchina / Pressa', note:'Priorità n°1: aggiungi carico ogni seduta.'} },
+      {sets:3, reps:'6–10', rpe:'8', load:true,
+        home:{n:'Push-up piedi rialzati', note:'Pausa 1" al petto, spingi forte.'},
+        db:{n:'Distensioni manubri (panca/pavimento)', note:'Controlla la discesa 2-3".'},
+        gym:{n:'Panca piana bilanciere', note:'Scapole retratte, sovraccarico progressivo.'} },
+      {sets:3, reps:'8–12', rpe:'8', load:true,
+        home:{n:'Rematore australiano (sotto un tavolo)', note:'Corpo rigido, tira il petto al bordo.'},
+        db:{n:'Rematore manubrio 1 braccio', note:'Tira col gomito, contrai la scapola.'},
+        gym:{n:'Rematore bilanciere / Pulley', note:'Petto in fuori, tira all\'addome.'} },
+      {sets:2, reps:'12–15', rpe:'9', load:true,
+        home:{n:'Alzate laterali con elastico', note:'Lento, niente slancio.'},
+        db:{n:'Alzate laterali manubri', note:'Deltoide medio, controllo totale.'},
+        gym:{n:'Alzate laterali ai cavi', note:'Tensione costante.'} },
+      {sets:2, reps:'45s', rpe:'-',
+        home:{n:'Plank', note:'Corpo in linea, addome contratto.'},
+        db:{n:'Plank', note:'Corpo in linea, addome contratto.'},
+        gym:{n:'Plank / Crunch ai cavi', note:'Core stabile.'} },
+    ]},
+  FB:{ title:'Full-Body B', focus:'Femorali · Schiena · Petto',
+    ex:[
+      {sets:3, reps:'8–12', rpe:'8', load:true,
+        home:{n:'Stacco rumeno monopodalico', note:'Schiena neutra, allunga i femorali.'},
+        db:{n:'Stacchi rumeni manubri', note:'Ginocchia morbide, allungamento.'},
+        gym:{n:'Stacco rumeno bilanciere / Leg curl', note:'Femorali sotto carico.'} },
+      {sets:3, reps:'8–12', rpe:'8', load:true,
+        home:{n:'Trazioni / Australian pull-up', note:'Se serve assistite con elastico.'},
+        db:{n:'Rematore manubri prono largo', note:'Gomiti larghi → upper back.'},
+        gym:{n:'Lat machine / Trazioni', note:'Presa media-larga, schiena larga.'} },
+      {sets:3, reps:'8–12', rpe:'8', load:true,
+        home:{n:'Push-up decline con pausa', note:'Piedi elevati, petto alto.'},
+        db:{n:'Distensioni inclinate manubri', note:'Petto alto, controllo.'},
+        gym:{n:'Chest press / Panca inclinata', note:'Carico progressivo.'} },
+      {sets:2, reps:'10–12', rpe:'9', load:true,
+        home:{n:'Curl con elastico', note:'Supinazione completa.'},
+        db:{n:'Curl manubri alternati', note:'Gomito fermo, picco in alto.'},
+        gym:{n:'Curl bilanciere EZ', note:'Niente slancio.'} },
+      {sets:3, reps:'12–15', rpe:'9',
+        home:{n:'Calf raise monopodalico su scalino', note:'Pausa 1" in alto, ROM pieno.'},
+        db:{n:'Calf raise + zaino', note:'Pausa in allungamento.'},
+        gym:{n:'Calf alla macchina / pressa', note:'Carico alto.'} },
+    ]},
+  FC:{ title:'Full-Body C', focus:'Gambe · Spalle · Braccia',
+    ex:[
+      {sets:3, reps:'10–12', rpe:'8', load:true,
+        home:{n:'Affondi camminati', note:'Passo lungo, ginocchio quasi a terra.'},
+        db:{n:'Affondi camminati manubri', note:'Busto eretto, controllo.'},
+        gym:{n:'Affondi manubri / Leg press', note:'Carico progressivo.'} },
+      {sets:3, reps:'8–12', rpe:'8', load:true,
+        home:{n:'Pike push-up', note:'Bacino alto, spinta verticale.'},
+        db:{n:'Lento avanti manubri', note:'Schiena neutra, niente arco.'},
+        gym:{n:'Lento avanti bilanciere / Shoulder press', note:'Spinta sopra la testa.'} },
+      {sets:3, reps:'10–12', rpe:'8', load:true,
+        home:{n:'Rematore elastico 1 braccio', note:'Contrazione scapolare.'},
+        db:{n:'Rematore manubrio 1 braccio', note:'Tira al fianco.'},
+        gym:{n:'Pulley basso unilaterale', note:'Range completo.'} },
+      {sets:2, reps:'12–15', rpe:'9', load:true,
+        home:{n:'Dips tra due sedie', note:'Scendi a 90°.'},
+        db:{n:'French press manubri', note:'Gomiti fermi.'},
+        gym:{n:'Pushdown ai cavi', note:'Tricipiti isolati.'} },
+      {sets:2, reps:'15–20', rpe:'9',
+        home:{n:'Face pull con elastico', note:'Postura + spalla posteriore.'},
+        db:{n:'Rear delt fly manubri', note:'Apri lento.'},
+        gym:{n:'Face pull ai cavi', note:'Salute della spalla.'} },
+    ]},
+};
+
+/* ---- Registro programmi selezionabili ---- */
+const PROGRAMS = {
+  upper:    { name:'Upper Focus', desc:'Split A/B/C/D orientato al frame builder', schedule:SCHEDULE_UPPER, workouts:WORKOUTS_UPPER, wshort:{A:'Push',B:'Lower',C:'Pull',D:'Upper'} },
+  fullbody: { name:'Full-Body 3×', desc:'Ipertrofia, frequenza alta, ideale per chi viaggia', schedule:SCHEDULE_FB, workouts:WORKOUTS_FB, wshort:{FA:'Full A',FB:'Full B',FC:'Full C'} },
+};
+function programKey(){ return state.profile.program || (goal().key==='mass'?'fullbody':'upper'); }
+function activeProgram(){ return PROGRAMS[programKey()]||PROGRAMS.upper; }
+/* SCHEDULE/WORKOUTS/WSHORT diventano dinamici in base al programma attivo */
+let SCHEDULE, WORKOUTS, WSHORT;
+function applyProgram(){ const p=activeProgram(); SCHEDULE=p.schedule; WORKOUTS=p.workouts; WSHORT=p.wshort; }
+
 const EQUIP_LABEL={home:'Casa',db:'Manubri',gym:'Palestra'};
 
 /* ============================================================
@@ -1368,6 +1457,7 @@ function isOverridden(idx){ return state.overrides[fmt(dateOf(idx))]!==undefined
 const main = document.getElementById('main');
 
 function render(){
+  applyProgram(); // risolve schede/schedule del programma attivo (upper | fullbody)
   // onboarding obbligatorio al primo avvio (nessun obiettivo scelto)
   if(!state.profile.goal){ renderOnboarding(); return; }
 
@@ -1514,7 +1604,7 @@ function computeTargets(idx){
     const s=p.macroSplit;
     pro=Math.round(kcal*s.p/100/4); fat=Math.round(kcal*s.f/100/9); cho=Math.round(kcal*s.c/100/4);
   } else {
-    const perKg=p.proteinPerKg || (g.key==='cut'?2.2:g.key==='mass'?1.8:2.0);
+    const perKg=p.proteinPerKg || (g.key==='cut'?2.2:g.key==='mass'?2.0:2.0);
     pro = p.weight ? Math.round(perKg*p.weight) : Math.round(planMacros(idx).pro*g.pro);
     const fatPct = g.key==='cut'?0.25:g.key==='mass'?0.27:0.28;
     fat = Math.round(kcal*fatPct/9);
@@ -1743,7 +1833,6 @@ function workoutPct(){
   w.ex.forEach((e,ei)=>{for(let s=0;s<e.sets;s++){total++;if(r.sets[wid+'_'+ei+'_'+s])done++;}});
   return total?Math.round(done/total*100):0;
 }
-const WSHORT={A:'Push',B:'Lower',C:'Pull',D:'Upper'};
 function workoutPicker(){
   const dk=dayKey(activeDayIdx);
   const wid=effWorkoutId(activeDayIdx);
@@ -1758,7 +1847,7 @@ function workoutPicker(){
     </div>
     <div class="wpick-row">
       <button class="wp-chip ${wid===null?'on':''}" data-wset="rest"><i data-lucide="moon"></i> Riposo</button>
-      ${['A','B','C','D'].map(k=>`<button class="wp-chip ${wid===k?'on':''}" data-wset="${k}"><b>${k}</b> ${WSHORT[k]}</button>`).join('')}
+      ${Object.keys(WORKOUTS).map(k=>`<button class="wp-chip ${wid===k?'on':''}" data-wset="${k}"><b>${k.replace('F','')}</b> ${WSHORT[k]}</button>`).join('')}
     </div>
   </div>`;
 }
@@ -1806,7 +1895,7 @@ function viewTrain(){
         const v=e[mode]||e.db;
         const exName=v.n, note=v.note;
         const sc=exScheme(e,ei,mode); const reps=sc.reps;
-        const loggable = (mode==='gym'||e.load);
+        const loggable = (mode==='gym'||e.load) && e.rpe!=='-';
         const last=(state.loads[exName]||[]).slice(-1)[0];
         return `<div class="exercise">
           <div class="ex-head">
@@ -1895,13 +1984,15 @@ function viewProgress(){
     ${isPro()?`<div class="card">
       ${loadNames.length?loadNames.map(n=>{
         const h=state.loads[n], l=h.slice(-1)[0], f=h[0];
-        const up=h.length>1 && (l.w>f.w || (l.w===f.w && l.reps>f.reps));
-        return `<div class="loadrow"><span class="lr-n">${n}</span>
+        const e1=Math.round(l.w*(1+l.reps/30));          // 1RM stimato (Epley)
+        const e1first=Math.round(f.w*(1+f.reps/30));
+        const gain=e1-e1first;
+        return `<div class="loadrow"><span class="lr-n">${n}<br><span class="lr-e1 mono">e1RM ${e1}kg${gain>0?` · +${gain}`:''}</span></span>
           <span class="lr-v">${l.w}kg × ${l.reps}</span>
-          <span class="lr-d">${up?'▲':''} ${h.length}×</span></div>`;
+          <span class="lr-d">${gain>0?'▲':''} ${h.length}×</span></div>`;
       }).join(''):`<div class="empty">Nessun carico registrato.<br>Vai su <b>Workout</b> e logga i tuoi pesi negli esercizi.</div>`}
-    </div>`:`<div class="card">${lockBox('Storico carichi & sovraccarico','Monitora la progressione di ogni esercizio')}</div>`}
-    <p class="tip">Registra il peso 1–3 volte a settimana, sempre a digiuno. Conta il trend (media 7gg), non il singolo giorno.</p>
+    </div>`:`<div class="card">${lockBox('Storico carichi, e1RM & sovraccarico','Massimale stimato e progressione di ogni esercizio')}</div>`}
+    <p class="tip">L'<b>e1RM</b> stima il tuo massimale dal carico × reps: sale = stai diventando più forte, il vero motore della massa. Conta il trend peso (media 7gg), non il singolo giorno.</p>
   </div>`;
 }
 function nutritionHistory(){
@@ -2029,7 +2120,7 @@ function bioCard(){
 }
 function macroCard(){
   const p=state.profile, t=computeTargets(activeDayIdx);
-  const perKg=p.proteinPerKg||(goal().key==='cut'?2.2:goal().key==='mass'?1.8:2.0);
+  const perKg=p.proteinPerKg||(goal().key==='cut'?2.2:goal().key==='mass'?2.0:2.0);
   return `<div class="card">
     <div class="setrow"><div><div class="sr-t">Macro personalizzati</div><div class="sr-d">Imposta tu lo split P/C/G in %</div></div>${toggleHTML('useCustomMacros',p.useCustomMacros)}</div>
     ${p.useCustomMacros?`
@@ -2068,6 +2159,16 @@ function viewProfile(){
           <div class="gc-d">${go.tagline}</div>
         </button>`).join('')}
     </div>
+
+    <div class="section-head"><h2>Programma allenamento</h2></div>
+    <div class="goalgrid" style="grid-template-columns:1fr 1fr">
+      ${Object.keys(PROGRAMS).map(k=>{const pr=PROGRAMS[k];const on=programKey()===k;
+        return `<button class="goalcard ${on?'sel':''}" data-program="${k}" style="text-align:left;flex-direction:row;align-items:flex-start;gap:10px">
+          <i data-lucide="${k==='fullbody'?'flame':'layout-grid'}"></i>
+          <div style="flex:1"><div class="gc-t" style="font-size:13px">${pr.name}</div><div class="gc-d">${pr.desc}</div></div>
+        </button>`;}).join('')}
+    </div>
+    <p class="tip">Full-Body 3× = ogni muscolo 3 volte a settimana: massima frequenza per l'ipertrofia e resistente ai viaggi (usa <b>Casa</b> come modalità viaggio).</p>
 
     <div class="section-head"><h2>I tuoi dati</h2></div>
     ${bioCard()}
@@ -2470,6 +2571,11 @@ function bindDynamic(){
     state.profile.goal=el.dataset.goal; save(); render();
     toast('Obiettivo aggiornato', GOALS[state.profile.goal].label, 'volt');
   });
+  // --- cambio programma allenamento ---
+  main.querySelectorAll('[data-program]').forEach(el=>el.onclick=()=>{
+    state.profile.program=el.dataset.program; buzz(10); save(); render();
+    toast('Programma aggiornato', PROGRAMS[el.dataset.program].name, 'volt');
+  });
 
   // --- toggle (notifiche + impostazioni profilo) ---
   main.querySelectorAll('[data-toggle]').forEach(el=>el.onclick=async()=>{
@@ -2492,7 +2598,7 @@ function bindDynamic(){
     else { el.onchange=()=>{ const v=el.value; state.profile[f]=(f==='activity')?v:(parseFloat(v)||null); if(f==='weight'&&state.profile.weight) addWeight(state.profile.weight); save(); render(); }; }
   });
   main.querySelectorAll('[data-split]').forEach(el=>el.onchange=()=>{ state.profile.macroSplit[el.dataset.split]=Math.max(0,Math.min(100,parseInt(el.value)||0)); save(); render(); });
-  main.querySelectorAll('[data-perkg]').forEach(el=>el.onclick=()=>{ const cur=state.profile.proteinPerKg||(goal().key==='cut'?2.2:goal().key==='mass'?1.8:2.0); state.profile.proteinPerKg=Math.max(1.2,Math.min(3,Math.round((cur+ +el.dataset.perkg*0.1)*10)/10)); save(); render(); });
+  main.querySelectorAll('[data-perkg]').forEach(el=>el.onclick=()=>{ const cur=state.profile.proteinPerKg||(goal().key==='cut'?2.2:goal().key==='mass'?2.0:2.0); state.profile.proteinPerKg=Math.max(1.2,Math.min(3,Math.round((cur+ +el.dataset.perkg*0.1)*10)/10)); save(); render(); });
   // --- report settimanale ---
   const sr=document.getElementById('shareReport'); if(sr)sr.onclick=shareReport;
   // --- backup export/import ---
