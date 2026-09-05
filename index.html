@@ -544,6 +544,11 @@ nav.tabs button.active svg{filter:drop-shadow(0 0 8px rgba(204,255,0,.5));}
 .fp-search svg{width:16px;height:16px;color:var(--muted);flex:0 0 auto;}
 .fp-search input{flex:1;background:none;border:none;color:var(--text);font-size:14px;}
 .fp-search input:focus{outline:none;}
+.fp-tabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:4px 0 6px;padding-bottom:2px;}
+.fp-tabs::-webkit-scrollbar{display:none;}
+.fp-tab{flex:0 0 auto;display:inline-flex;align-items:center;gap:5px;padding:8px 12px;border-radius:99px;background:var(--surface-2);border:1px solid var(--border);color:var(--muted);font-weight:700;font-size:12px;white-space:nowrap;}
+.fp-tab svg{width:14px;height:14px;}
+.fp-tab.on{background:var(--volt);border-color:var(--volt);color:#04121a;}
 .fp-item .fp-n{flex:1;font-weight:700;font-size:13.5px;}
 .fp-item .fp-m{font-size:11px;color:var(--muted);}
 .fp-item svg{width:18px;height:18px;color:var(--volt);flex:0 0 auto;}
@@ -1354,6 +1359,59 @@ Object.assign(FOOD_DB, {
 // frutta in categoria dedicata
 ['banana','mela','pera','arancia','fruttibosco'].forEach(k=>{ if(FOOD_DB[k]) FOOD_DB[k].cat='fruit'; });
 
+/* ===== Ampliamento libreria alimenti (v4) ===== */
+Object.assign(FOOD_DB, {
+  // PROTEINE
+  wurstelpollo:{l:'Würstel di pollo',u:'g',kcal:150,pro:14,cho:2,fat:9,fib:0,sug:1,sat:3,sal:2,cat:'pro',extra:1},
+  hamburgertacchino:{l:'Hamburger di tacchino',u:'g',kcal:150,pro:19,cho:1,fat:8,fib:0,sug:0,sat:2.2,sal:0.4,cat:'pro',extra:1},
+  surimi:{l:'Surimi',u:'g',kcal:99,pro:8,cho:14,fat:1,fib:0,sug:5,sat:0.2,sal:1,cat:'pro',extra:1},
+  calamari:{l:'Calamari',u:'g',kcal:92,pro:16,cho:3,fat:1.4,fib:0,sug:0,sat:0.4,sal:0.4,cat:'pro',extra:1},
+  cozze:{l:'Cozze',u:'g',kcal:86,pro:12,cho:4,fat:2,fib:0,sug:0,sat:0.4,sal:0.3,cat:'pro',extra:1},
+  scamorza:{l:'Scamorza',u:'g',kcal:334,pro:25,cho:1,fat:26,fib:0,sug:1,sat:16,sal:1.2,cat:'pro',extra:1},
+  stracchino:{l:'Stracchino',u:'g',kcal:300,pro:18,cho:1,fat:25,fib:0,sug:1,sat:16,sal:1,cat:'pro',extra:1},
+  parmigiano:{l:'Parmigiano',u:'g',kcal:392,pro:33,cho:0,fat:29,fib:0,sug:0,sat:19,sal:1.6,cat:'pro',extra:1},
+  yogurtintero:{l:'Yogurt intero',u:'g',kcal:61,pro:3.5,cho:5,fat:3.3,fib:0,sug:5,sat:2,sal:0.1,cat:'pro',extra:1},
+  latte:{l:'Latte parz. scremato',u:'g',kcal:46,pro:3.3,cho:5,fat:1.6,fib:0,sug:5,sat:1,sal:0.1,cat:'pro',extra:1},
+  lentirosse:{l:'Lenticchie rosse cotte',u:'g',kcal:120,pro:9,cho:20,fat:0.4,fib:8,sug:1.8,sat:0.1,sal:0,cat:'pro',extra:1},
+  fave:{l:'Fave',u:'g',kcal:110,pro:8,cho:18,fat:0.6,fib:5,sug:2,sat:0.1,sal:0,cat:'pro',extra:1},
+  soiatexturizzata:{l:'Soia (proteina)',u:'g',kcal:335,pro:52,cho:30,fat:1,fib:18,sug:8,sat:0.2,sal:0.1,cat:'pro',extra:1},
+  // CARBOIDRATI
+  risovenere:{l:'Riso venere/rosso (cotto)',u:'g',kcal:130,pro:3.5,cho:26,fat:1,fib:2,sug:0,sat:0.2,sal:0,cat:'cho',extra:1},
+  panesegale:{l:'Pane di segale (fetta)',u:'pz',kcal:83,pro:2.7,cho:15,fat:0.6,fib:1.9,sug:0.5,sat:0.1,sal:0.4,cat:'cho',extra:1,step:1},
+  piadina:{l:'Piadina',u:'pz',kcal:300,pro:8,cho:48,fat:8,fib:2,sug:1,sat:3.5,sal:1.2,cat:'cho',extra:1,step:1},
+  tortilla:{l:'Tortilla di mais',u:'pz',kcal:150,pro:4,cho:30,fat:2,fib:2,sug:0.5,sat:0.3,sal:0.3,cat:'cho',extra:1,step:1},
+  polenta:{l:'Polenta (cotta)',u:'g',kcal:85,pro:2,cho:18,fat:0.4,fib:1.5,sug:0.2,sat:0.1,sal:0.1,cat:'cho',extra:1},
+  granosaraceno:{l:'Grano saraceno (cotto)',u:'g',kcal:92,pro:3.4,cho:20,fat:0.6,fib:2.7,sug:0,sat:0.1,sal:0,cat:'cho',extra:1},
+  fettebiscottate:{l:'Fette biscottate',u:'g',kcal:410,pro:11,cho:73,fat:6,fib:4,sug:6,sat:1,sal:0.9,cat:'cho',extra:1},
+  muesli:{l:'Muesli',u:'g',kcal:363,pro:9,cho:66,fat:6,fib:7,sug:20,sat:1,sal:0.1,cat:'cho',extra:1},
+  castagne:{l:'Castagne',u:'g',kcal:160,pro:2,cho:34,fat:1.3,fib:5,sug:11,sat:0.2,sal:0,cat:'cho',extra:1},
+  // FRUTTA
+  ciliegie:{l:'Ciliegie',u:'g',kcal:63,pro:1,cho:14,fat:0.2,fib:2,sug:13,sat:0,sal:0,cat:'fruit',extra:1},
+  fichi:{l:'Fichi',u:'g',kcal:74,pro:0.8,cho:16,fat:0.3,fib:3,sug:16,sat:0,sal:0,cat:'fruit',extra:1},
+  melagrana:{l:'Melagrana',u:'g',kcal:83,pro:1.7,cho:15,fat:1.2,fib:4,sug:14,sat:0.1,sal:0,cat:'fruit',extra:1},
+  clementine:{l:'Clementine',u:'pz',kcal:35,pro:0.6,cho:9,fat:0.1,fib:1.3,sug:7,sat:0,sal:0,cat:'fruit',extra:1,step:1},
+  pompelmo:{l:'Pompelmo',u:'pz',kcal:52,pro:0.9,cho:13,fat:0.2,fib:2,sug:8,sat:0,sal:0,cat:'fruit',extra:1,step:1},
+  cachi:{l:'Cachi',u:'g',kcal:70,pro:0.6,cho:18,fat:0.2,fib:3.6,sug:13,sat:0,sal:0,cat:'fruit',extra:1},
+  prugne:{l:'Prugne',u:'g',kcal:46,pro:0.7,cho:11,fat:0.3,fib:1.4,sug:10,sat:0,sal:0,cat:'fruit',extra:1},
+  lamponi:{l:'Lamponi',u:'g',kcal:52,pro:1.2,cho:12,fat:0.7,fib:6.5,sug:4.4,sat:0,sal:0,cat:'fruit',extra:1},
+  uvetta:{l:'Uvetta',u:'g',kcal:299,pro:3,cho:79,fat:0.5,fib:3.7,sug:59,sat:0.1,sal:0,cat:'fruit',extra:1},
+  // VERDURA
+  radicchio:{l:'Radicchio',u:'g',kcal:23,pro:1.4,cho:4,fat:0.3,fib:3,sug:0.6,sat:0,sal:0,cat:'veg',extra:1},
+  verza:{l:'Verza / cavolo',u:'g',kcal:27,pro:2,cho:5,fat:0.1,fib:3,sug:2.8,sat:0,sal:0,cat:'veg',extra:1},
+  cipolla:{l:'Cipolla',u:'g',kcal:40,pro:1.1,cho:9,fat:0.1,fib:1.7,sug:4.2,sat:0,sal:0,cat:'veg',extra:1},
+  sedano:{l:'Sedano',u:'g',kcal:16,pro:0.7,cho:3,fat:0.2,fib:1.6,sug:1.3,sat:0,sal:0.08,cat:'veg',extra:1},
+  barbabietola:{l:'Barbabietola',u:'g',kcal:43,pro:1.6,cho:10,fat:0.2,fib:2.8,sug:7,sat:0,sal:0.08,cat:'veg',extra:1},
+  zucca:{l:'Zucca',u:'g',kcal:26,pro:1,cho:6,fat:0.1,fib:1.1,sug:2.8,sat:0,sal:0,cat:'veg',extra:1},
+  porri:{l:'Porri',u:'g',kcal:31,pro:1.5,cho:6,fat:0.2,fib:2,sug:2.5,sat:0,sal:0,cat:'veg',extra:1},
+  songino:{l:'Songino / valeriana',u:'g',kcal:21,pro:2,cho:3.6,fat:0.4,fib:1.5,sug:0.6,sat:0,sal:0.03,cat:'veg',extra:1},
+  // GRASSI
+  semichia:{l:'Semi di chia',u:'g',kcal:486,pro:17,cho:42,fat:31,fib:34,sug:0,sat:3.3,sal:0,cat:'fat',extra:1},
+  semilino:{l:'Semi di lino',u:'g',kcal:534,pro:18,cho:29,fat:42,fib:27,sug:1.5,sat:3.7,sal:0,cat:'fat',extra:1},
+  pinoli:{l:'Pinoli',u:'g',kcal:673,pro:14,cho:13,fat:68,fib:3.7,sug:3.6,sat:4.9,sal:0,cat:'fat',extra:1},
+  tahina:{l:'Tahina (cucchiaio)',u:'pz',kcal:89,pro:2.6,cho:3,fat:8,fib:1.4,sug:0,sat:1.1,sal:0,cat:'fat',extra:1,step:1},
+  cremamandorle:{l:'Crema di mandorle (cucchiaio)',u:'pz',kcal:98,pro:3.4,cho:3,fat:9,fib:1.6,sug:0.7,sat:0.7,sal:0,cat:'fat',extra:1,step:1},
+});
+
 /* alternative colazione Huel ricorrenti */
 const M = { huelBase:{ alts:[
   {name:'Porridge proteico',items:'60g avena + 1 scoop whey + 200ml acqua',kcal:400,pro:38},
@@ -1709,8 +1767,12 @@ function mealActiveAlt(idx,m){
 }
 // elenco voci effettive del pasto (con modifiche del diario applicate)
 function mealItems(idx,m){
-  if(m.free) return {free:true,items:[]};
   const d=diaryRec(fmt(dateOf(idx)),m.id);
+  if(m.free){ // pasto libero: solo alimenti aggiunti dall'utente
+    const items=[];
+    d.extra.forEach((p,j)=>items.push({type:'extra',j,key:p[0],amt:p[1],removed:false,macro:foodMacro(p[0],p[1])}));
+    return {free:true,alt:null,items};
+  }
   const alt=mealActiveAlt(idx,m);
   const items=[];
   if(alt){
@@ -1952,9 +2014,21 @@ function mealsHTML(){
   return dayMeals(activeDayIdx).map(m=>{
     const r=rec(fmt(dateOf(activeDayIdx)));
     if(m.free){
-      return `<div class="card meal-card"><div class="meal-h">
-          <div class="meal-hi"><div class="slot">${m.slot}</div><div class="name">${m.name}</div></div></div>
-        <div class="freebox"><div class="t"><i data-lucide="pizza" style="width:16px;height:16px"></i> Pasto libero</div><p>${m.items}</p></div></div>`;
+      const {items}=mealItems(activeDayIdx,m);
+      const sub=roundM(mealEatenMacro(activeDayIdx,m));
+      const done=!!r.meals[m.id];
+      return `<div class="card meal-card ${done?'eaten':''}">
+        <div class="meal-h">
+          <button class="chk" data-check="${m.id}"><i data-lucide="check"></i></button>
+          <div class="meal-hi"><div class="slot">${m.slot} · <span class="alt-flag">libero</span></div><div class="name">${m.name}</div></div>
+          <div class="meal-kcal mono">${sub.kcal}<small>kcal</small></div>
+        </div>
+        <div class="freebox"><div class="t"><i data-lucide="pizza" style="width:16px;height:16px"></i> Pasto libero</div><p>${m.items}</p></div>
+        ${items.length?`<div class="frows">${items.map(it=>foodRow(m.id,it)).join('')}</div>`:''}
+        <div class="meal-actions">
+          <button class="addfood" data-addfood="${m.id}"><i data-lucide="plus"></i> Aggiungi ciò che hai mangiato</button>
+        </div>
+      </div>`;
     }
     const {alt,items}=mealItems(activeDayIdx,m);
     const sub=roundM(mealEatenMacro(activeDayIdx,m));
@@ -1978,29 +2052,38 @@ function mealsHTML(){
 }
 
 /* ---------- DIARY: picker + mutazioni quantità (real-time) ---------- */
-let fpTarget=null, fpQuery='';
+let fpTarget=null, fpQuery='', fpCat='pro';
 const CAT_LABEL={pro:'Proteine',cho:'Carboidrati',fruit:'Frutta',veg:'Verdura',fat:'Grassi',other:'Altro'};
+const CAT_ICON={pro:'drumstick',cho:'wheat',fruit:'apple',veg:'carrot',fat:'nut'};
 const CAT_ORDER=['pro','cho','fruit','veg','fat'];
 function fpNorm(s){ return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
+function fpGrid(keys){
+  keys.sort((a,b)=>FDB(a).l.localeCompare(FDB(b).l));
+  return `<div class="fp-grid">`+keys.map(k=>{const f=FDB(k);return `<button class="fp-item" data-addkey="${k}">
+    <span class="fp-n">${f.l}</span>
+    <span class="fp-m mono">${f.kcal} kcal ${f.u==='g'?'/100g':'/pz'}</span>
+    <i data-lucide="plus"></i></button>`;}).join('')+`</div>`;
+}
 function renderFpList(){
   const list=document.getElementById('fpList'); if(!list) return;
   const q=fpNorm(fpQuery.trim());
-  const html=CAT_ORDER.map(c=>{
-    const keys=Object.keys(FOOD_DB).filter(k=>FOOD_DB[k].extra&&FOOD_DB[k].cat===c&&(!q||fpNorm(FOOD_DB[k].l).includes(q)));
-    if(!keys.length) return '';
-    keys.sort((a,b)=>FOOD_DB[a].l.localeCompare(FOOD_DB[b].l));
-    return `<div class="fp-cat">${CAT_LABEL[c]}</div><div class="fp-grid">`+
-      keys.map(k=>{const f=FOOD_DB[k];return `<button class="fp-item" data-addkey="${k}">
-        <span class="fp-n">${f.l}</span>
-        <span class="fp-m mono">${f.kcal} kcal ${f.u==='g'?'/100g':'/pz'}</span>
-        <i data-lucide="plus"></i></button>`;}).join('')+`</div>`;
-  }).join('');
-  list.innerHTML = html || `<div class="empty">Nessun alimento per "${fpQuery}".</div>`;
+  // tab categorie (una categoria alla volta \u2192 niente listone)
+  const tabs=`<div class="fp-tabs">${CAT_ORDER.map(c=>`<button class="fp-tab ${(!q&&fpCat===c)?'on':''}" data-fpcat="${c}"><i data-lucide="${CAT_ICON[c]}"></i>${CAT_LABEL[c]}</button>`).join('')}</div>`;
+  let body;
+  if(q){ // ricerca: attraversa tutte le categorie
+    const keys=Object.keys(FOOD_DB).filter(k=>FOOD_DB[k].extra&&fpNorm(FOOD_DB[k].l).includes(q));
+    body = keys.length? `<div class="fp-cat">Risultati \u00b7 ${keys.length}</div>`+fpGrid(keys) : `<div class="empty">Nessun alimento per "${fpQuery}".</div>`;
+  } else {
+    const keys=Object.keys(FOOD_DB).filter(k=>FOOD_DB[k].extra&&FOOD_DB[k].cat===fpCat);
+    body = `<div class="fp-cat">${CAT_LABEL[fpCat]} \u00b7 ${keys.length}</div>`+fpGrid(keys);
+  }
+  list.innerHTML = tabs + body;
   list.querySelectorAll('[data-addkey]').forEach(b=>b.onclick=()=>addExtra(b.dataset.addkey));
+  list.querySelectorAll('[data-fpcat]').forEach(b=>b.onclick=()=>{ fpCat=b.dataset.fpcat; fpQuery=''; const s=document.getElementById('fpSearch'); if(s)s.value=''; renderFpList(); });
   lucide.createIcons();
 }
 function openFoodPicker(mealId){
-  fpTarget=mealId; fpQuery='';
+  fpTarget=mealId; fpQuery=''; fpCat='pro';
   const s=document.getElementById('fpSearch'); if(s) s.value='';
   renderFpList();
   document.getElementById('foodPicker').classList.add('show');
