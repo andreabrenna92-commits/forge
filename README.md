@@ -1,4 +1,11 @@
-# FITNOMAD — Smart Diet & Training
+# FITNOMAD — Smart Diet & Training · SYSTEM Edition
+
+Interfaccia "Hunter" in stile Solo Leveling: tema HUD neon (cyan/violet, font Orbitron/Rajdhani),
+gradi E→S, XP/livelli, attributi STR/AGI/VIT/END/INT, Daily Quest "Becoming Stronger",
+barre HP (energia) / MP (idratazione), Boss Fight mensili e notifiche [SYSTEM] con effetto typewriter.
+Tutte le funzioni core (schede, macro, progressioni) restano invariate; il tema si sceglie in Profilo (System/Scuro/Chiaro).
+
+
 
 Single Page App (HTML/CSS/JS nativo, zero build) per gestire piano alimentare e allenamento.
 Dark mode premium, mobile-first, installabile come PWA su iPhone, funziona offline.
