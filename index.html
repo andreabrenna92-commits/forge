@@ -566,6 +566,7 @@ body:not([data-theme="system"]) .howto{border-color:rgba(204,255,0,.3);}
 .ht-svg .back{fill:var(--muted-2);opacity:.7;stroke:var(--surface-2);stroke-width:1;stroke-linejoin:round;}
 .ht-svg .accent{fill:var(--volt);stroke:none;filter:drop-shadow(0 0 4px var(--volt));}
 .ht-svg .head{fill:var(--muted);stroke:var(--surface-2);stroke-width:1;}
+.ht-svg .foot{fill:var(--muted);stroke:none;}
 .ht-svg .grd{stroke:var(--border-strong);stroke-width:2;stroke-linecap:round;}
 .ht-svg .load{fill:var(--text);stroke:none;}
 .ht-svg .plate{fill:var(--text);stroke:none;}
@@ -2194,78 +2195,118 @@ function workoutPicker(){
 }
 
 /* ============================================================
-   GUIDE ANIMATE — figura muscolosa in movimento (SVG/SMIL, fatta in casa)
-   Corpo a silhouette piena (non stilizzato), attrezzo diverso per Casa/Manubri/Palestra
+   GUIDE ANIMATE — uomo articolato (rig scheletrico SVG/SMIL)
+   Ossa a lunghezza costante che ruotano attorno alle articolazioni:
+   movimento umano naturale. Vista laterale. Attrezzo per variante.
    ============================================================ */
 const HT_KS='.42 0 .58 1;.42 0 .58 1', HT_KT='0;0.5;1';
 function htA(at,a,b,dur){ return `<animate attributeName="${at}" values="${a};${b};${a}" dur="${dur}s" repeatCount="indefinite" keyTimes="${HT_KT}" calcMode="spline" keySplines="${HT_KS}"/>`; }
-// polygono "muscolo": due giunti + rigonfiamento centrale, restituisce stringa points
-function htLimb(a,b,w1,w2,bulge){
-  const dx=b[0]-a[0],dy=b[1]-a[1],L=Math.hypot(dx,dy)||1,nx=-dy/L,ny=dx/L;
-  const mx=(a[0]+b[0])/2,my=(a[1]+b[1])/2,wm=Math.max(w1,w2)*(bulge||1);
-  return [[a[0]+nx*w1,a[1]+ny*w1],[mx+nx*wm,my+ny*wm],[b[0]+nx*w2,b[1]+ny*w2],
-          [b[0]-nx*w2,b[1]-ny*w2],[mx-nx*wm,my-ny*wm],[a[0]-nx*w1,a[1]-ny*w1]]
-         .map(q=>q[0].toFixed(1)+','+q[1].toFixed(1)).join(' ');
-}
-function htPoly(cls,pa,pb,dur){ return `<polygon class="${cls}" points="${pa}">${htA('points',pa,pb,dur)}</polygon>`; }
-function htCirc(cls,a,b,r,dur){ return `<circle class="${cls}" cx="${a[0]}" cy="${a[1]}" r="${r}">${htA('cx',a[0],b[0],dur)}${htA('cy',a[1],b[1],dur)}</circle>`; }
-function htLine(cls,a1,b1,a2,b2,dur){ return `<line class="${cls}" x1="${a1[0]}" y1="${a1[1]}" x2="${a2[0]}" y2="${a2[1]}">${htA('x1',a1[0],b1[0],dur)}${htA('y1',a1[1],b1[1],dur)}${htA('x2',a2[0],b2[0],dur)}${htA('y2',a2[1],b2[1],dur)}</line>`; }
-const off=(j,dx,dy)=>[j[0]+(dx||0),j[1]+(dy||0)];
-const mir=(j,cx)=>[2*cx-j[0],j[1]];
+function htRot(a,b,dur){ return `<animateTransform attributeName="transform" type="rotate" values="${a};${b};${a}" dur="${dur}s" repeatCount="indefinite" keyTimes="${HT_KT}" calcMode="spline" keySplines="${HT_KS}"/>`; }
+function htCirc(cls,a,b,r,dur){ return `<circle class="${cls}" cx="${a[0].toFixed(1)}" cy="${a[1].toFixed(1)}" r="${r}">${htA('cx',a[0].toFixed(1),b[0].toFixed(1),dur)}${htA('cy',a[1].toFixed(1),b[1].toFixed(1),dur)}</circle>`; }
+function htLine(cls,a1,b1,a2,b2,dur){ return `<line class="${cls}" x1="${a1[0].toFixed(1)}" y1="${a1[1].toFixed(1)}" x2="${a2[0].toFixed(1)}" y2="${a2[1].toFixed(1)}">${htA('x1',a1[0].toFixed(1),b1[0].toFixed(1),dur)}${htA('y1',a1[1].toFixed(1),b1[1].toFixed(1),dur)}${htA('x2',a2[0].toFixed(1),b2[0].toFixed(1),dur)}${htA('y2',a2[1].toFixed(1),b2[1].toFixed(1),dur)}</line>`; }
 
-// pose: A/B = giunti {head,shoulder,hip,knee,ankle,elbow,hand[,knee2,ankle2]}
+// lunghezze ossa (px)
+const RIG={torso:33, neck:6, headR:8, uarm:19, farm:18, thigh:24, shin:24, footL:11};
+const D2R=Math.PI/180;
+function rvec(deg,L){ const r=deg*D2R; return [-L*Math.sin(r), L*Math.cos(r)]; }
+const radd=(a,b)=>[a[0]+b[0],a[1]+b[1]];
+// forward kinematics dalla pelvi (origine 0,0), angoli in gradi ASSOLUTI (mondo)
+function fk(p){
+  const hip=[0,0];
+  const sh=rvec(p.torso,RIG.torso);
+  const neck=radd(sh,rvec(p.head!=null?p.head:p.torso,RIG.neck));
+  const headc=radd(sh,rvec(p.head!=null?p.head:p.torso,RIG.neck+RIG.headR));
+  const el=radd(sh,rvec(p.uarm,RIG.uarm));
+  const hand=radd(el,rvec(p.farm,RIG.farm));
+  const kn=radd(hip,rvec(p.thigh,RIG.thigh));
+  const an=radd(kn,rvec(p.shin,RIG.shin));
+  const knF=radd(hip,rvec(p.thighF!=null?p.thighF:p.thigh,RIG.thigh));
+  const anF=radd(knF,rvec(p.shinF!=null?p.shinF:p.shin,RIG.shin));
+  return {hip,sh,neck,headc,el,hand,kn,an,knF,anF};
+}
+// osso disegnato lungo +Y da (0,0) a (0,L), con ventre muscolare, giunto arrotondato
+function bone(cls,L,wTop,wBot,bulge){
+  const wm=Math.max(wTop,wBot)*(bulge||1.12);
+  const d=`M ${-wTop} 0 C ${-wm} ${L*0.34} ${-wm} ${L*0.66} ${-wBot} ${L} `+
+          `Q 0 ${L+wBot*0.8} ${wBot} ${L} C ${wm} ${L*0.66} ${wm} ${L*0.34} ${wTop} 0 `+
+          `Q 0 ${-wTop*0.8} ${-wTop} 0 Z`;
+  return `<path class="${cls}" d="${d}"/>`;
+}
+// gruppo osso: ruota attorno all'origine (giunto), disegna osso, poi figli al tip (0,L)
+function seg(localA,localB,dur,L,wTop,wBot,cls,bulge,child){
+  return `<g transform="rotate(${localA.toFixed(1)})">${htRot(localA.toFixed(1),localB.toFixed(1),dur)}`+
+         bone(cls,L,wTop,wBot,bulge)+
+         (child?`<g transform="translate(0,${L})">${child}</g>`:'')+`</g>`;
+}
+
+// angoli MONDO (figura vista da sinistra): 0=giù, 180=su, dir=(-sinθ,cosθ)
 const POSES={
-  squat:{view:'side',accent:['thigh'],dur:2.6,
-    A:{head:[60,25],shoulder:[60,38],hip:[60,66],knee:[63,90],ankle:[60,110],elbow:[52,42],hand:[70,42]},
-    B:{head:[54,40],shoulder:[54,53],hip:[56,84],knee:[81,95],ankle:[60,110],elbow:[46,58],hand:[64,58]}},
-  lunge:{view:'side2',accent:['thigh'],dur:2.6,
-    A:{head:[60,24],shoulder:[60,37],hip:[60,66],knee:[74,88],ankle:[74,110],elbow:[58,52],hand:[58,66],knee2:[48,86],ankle2:[42,108]},
-    B:{head:[60,36],shoulder:[60,49],hip:[60,80],knee:[84,94],ankle:[74,110],elbow:[58,64],hand:[58,80],knee2:[48,100],ankle2:[42,110]}},
-  hinge:{view:'side',accent:['torso'],dur:2.6,
-    A:{head:[60,24],shoulder:[60,37],hip:[60,66],knee:[59,90],ankle:[60,110],elbow:[60,52],hand:[60,68]},
-    B:{head:[88,46],shoulder:[80,52],hip:[60,66],knee:[57,90],ankle:[60,110],elbow:[74,66],hand:[70,82]}},
-  hipthrust:{view:'side',accent:['torso','thigh'],dur:2.4,
-    A:{head:[24,60],shoulder:[30,68],hip:[62,92],knee:[80,92],ankle:[88,110],elbow:[34,80],hand:[34,92]},
-    B:{head:[24,56],shoulder:[30,64],hip:[64,66],knee:[82,86],ankle:[88,110],elbow:[34,76],hand:[34,88]}},
-  push:{view:'side',accent:['uarm','torso'],dur:2.2,
-    A:{head:[34,60],shoulder:[46,70],hip:[76,86],knee:[88,96],ankle:[100,104],elbow:[44,84],hand:[44,98]},
-    B:{head:[34,72],shoulder:[46,82],hip:[76,92],knee:[88,100],ankle:[100,106],elbow:[34,90],hand:[44,98]}},
-  ohp:{view:'front',accent:['uarm','farm'],dur:2.4,
-    A:{head:[60,26],shoulder:[60,38],hip:[60,68],knee:[60,90],ankle:[60,110],elbow:[76,40],hand:[76,26]},
-    B:{head:[60,26],shoulder:[60,38],hip:[60,68],knee:[60,90],ankle:[60,110],elbow:[70,22],hand:[68,7]}},
-  row:{view:'side',accent:['farm','uarm'],dur:2.4,
-    A:{head:[84,44],shoulder:[78,50],hip:[58,66],knee:[56,90],ankle:[58,110],elbow:[82,66],hand:[84,82]},
-    B:{head:[84,44],shoulder:[78,50],hip:[58,66],knee:[56,90],ankle:[58,110],elbow:[70,54],hand:[74,58]}},
-  pulldown:{view:'front',accent:['farm','uarm'],dur:2.4,
-    A:{head:[60,30],shoulder:[60,40],hip:[60,70],knee:[60,92],ankle:[60,110],elbow:[74,24],hand:[80,8]},
-    B:{head:[60,30],shoulder:[60,40],hip:[60,70],knee:[60,92],ankle:[60,110],elbow:[72,38],hand:[78,44]}},
-  latraise:{view:'front',accent:['uarm'],dur:2.4,
-    A:{head:[60,24],shoulder:[60,37],hip:[60,68],knee:[60,90],ankle:[60,110],elbow:[70,50],hand:[72,64]},
-    B:{head:[60,24],shoulder:[60,37],hip:[60,68],knee:[60,90],ankle:[60,110],elbow:[76,40],hand:[92,40]}},
-  reardelt:{view:'front',accent:['uarm'],dur:2.4,
-    A:{head:[60,24],shoulder:[60,38],hip:[60,68],knee:[60,90],ankle:[60,110],elbow:[70,48],hand:[68,62]},
-    B:{head:[60,24],shoulder:[60,38],hip:[60,68],knee:[60,90],ankle:[60,110],elbow:[76,40],hand:[92,38]}},
-  curl:{view:'front',accent:['farm'],dur:2.2,
-    A:{head:[60,24],shoulder:[60,38],hip:[60,68],knee:[60,90],ankle:[60,110],elbow:[72,54],hand:[76,70]},
-    B:{head:[60,24],shoulder:[60,38],hip:[60,68],knee:[60,90],ankle:[60,110],elbow:[72,54],hand:[70,32]}},
-  triceps:{view:'front',accent:['farm'],dur:2.2,
-    A:{head:[60,24],shoulder:[60,38],hip:[60,68],knee:[60,90],ankle:[60,110],elbow:[70,52],hand:[64,40]},
-    B:{head:[60,24],shoulder:[60,38],hip:[60,68],knee:[60,90],ankle:[60,110],elbow:[70,52],hand:[72,74]}},
-  dip:{view:'side',accent:['uarm','torso'],dur:2.4,
-    A:{head:[60,28],shoulder:[60,40],hip:[60,70],knee:[62,92],ankle:[64,110],elbow:[48,50],hand:[46,64]},
-    B:{head:[60,42],shoulder:[60,54],hip:[60,84],knee:[62,104],ankle:[64,116],elbow:[44,58],hand:[46,64]}},
-  calf:{view:'front',accent:['shin'],dur:1.8,
-    A:{head:[60,26],shoulder:[60,39],hip:[60,70],knee:[60,92],ankle:[60,110],elbow:[60,55],hand:[60,69]},
-    B:{head:[60,18],shoulder:[60,31],hip:[60,62],knee:[60,84],ankle:[60,102],elbow:[60,47],hand:[60,61]}},
-  plank:{view:'side',accent:['torso'],dur:3,
-    A:{head:[34,66],shoulder:[46,72],hip:[74,80],knee:[86,88],ankle:[100,94],elbow:[42,86],hand:[34,88]},
-    B:{head:[34,64],shoulder:[46,70],hip:[74,77],knee:[86,86],ankle:[100,92],elbow:[42,86],hand:[34,88]}},
-  core:{view:'side',accent:['torso'],dur:2.2,
-    A:{head:[34,84],shoulder:[46,86],hip:[74,90],knee:[86,76],ankle:[98,88],elbow:[42,80],hand:[40,74]},
-    B:{head:[48,72],shoulder:[56,80],hip:[74,90],knee:[86,76],ankle:[98,88],elbow:[54,68],hand:[52,60]}},
+  // squat: in piedi -> accosciata profonda, talloni a terra, bilanciere sulle spalle
+  squat:{dur:2.6,accent:['thigh'],
+    A:{torso:192,head:188,uarm:150,farm:228,thigh:-4,shin:6},
+    B:{torso:204,head:196,uarm:150,farm:228,thigh:-42,shin:38}},
+  // affondo/split: gamba avanti flette, gamba dietro (F) piegata
+  lunge:{dur:2.6,accent:['thigh'],
+    A:{torso:186,head:184,uarm:150,farm:210,thigh:-18,shin:18,thighF:30,shinF:-18},
+    B:{torso:190,head:186,uarm:150,farm:210,thigh:-46,shin:46,thighF:52,shinF:-30}},
+  // stacco/hinge: anca indietro, busto si piega fino a orizzontale
+  hinge:{dur:2.6,accent:['torso'],
+    A:{torso:186,head:184,uarm:6,farm:6,thigh:-4,shin:6},
+    B:{torso:250,head:236,uarm:8,farm:8,thigh:6,shin:4}},
+  // hip thrust: schiena su panca, spinta d'anca (fianchi giù -> su)
+  hipthrust:{dur:2.4,accent:['thigh'],lying:'bridge',
+    A:{torso:292,head:288,uarm:250,farm:250,thigh:2,shin:-2},
+    B:{torso:263,head:259,uarm:250,farm:250,thigh:-28,shin:3}},
+  // panca: supino, braccia distese (lockout) -> gomiti piegati (petto)
+  push:{dur:2.2,accent:['uarm'],lying:'bench',
+    A:{torso:90,head:98,uarm:180,farm:180,thigh:225,shin:350},
+    B:{torso:90,head:98,uarm:165,farm:205,thigh:225,shin:350}},
+  // lento/overhead: bar alle spalle -> braccia distese sopra la testa
+  ohp:{dur:2.4,accent:['uarm'],
+    A:{torso:180,head:180,uarm:205,farm:178,thigh:0,shin:0},
+    B:{torso:180,head:180,uarm:180,farm:182,thigh:0,shin:0}},
+  // rematore: busto inclinato, gomito tira indietro
+  row:{dur:2.4,accent:['farm'],
+    A:{torso:242,head:220,uarm:6,farm:6,thigh:8,shin:2},
+    B:{torso:242,head:220,uarm:22,farm:70,thigh:8,shin:2}},
+  // lat machine/trazioni: braccia in alto distese -> gomiti tirati giù
+  pulldown:{dur:2.4,accent:['farm'],
+    A:{torso:182,head:182,uarm:186,farm:190,thigh:0,shin:0},
+    B:{torso:178,head:180,uarm:150,farm:120,thigh:0,shin:0}},
+  // alzate laterali: braccio giù -> braccio all'altezza spalla
+  latraise:{dur:2.4,accent:['uarm'],
+    A:{torso:180,head:180,uarm:6,farm:8,thigh:0,shin:0},
+    B:{torso:180,head:180,uarm:88,farm:92,thigh:0,shin:0}},
+  // rear delt/face pull: busto inclinato, braccio avanti -> apertura indietro
+  reardelt:{dur:2.4,accent:['uarm'],
+    A:{torso:238,head:220,uarm:-30,farm:-30,thigh:8,shin:2},
+    B:{torso:238,head:220,uarm:100,farm:110,thigh:8,shin:2}},
+  // curl: gomito fermo, avambraccio sale
+  curl:{dur:2.2,accent:['farm'],
+    A:{torso:180,head:180,uarm:8,farm:8,thigh:0,shin:0},
+    B:{torso:180,head:180,uarm:10,farm:150,thigh:0,shin:0}},
+  // tricipiti pushdown: gomito fermo, avambraccio si estende in basso
+  triceps:{dur:2.2,accent:['farm'],
+    A:{torso:180,head:180,uarm:14,farm:120,thigh:0,shin:0},
+    B:{torso:180,head:180,uarm:14,farm:6,thigh:0,shin:0}},
+  // dip: corpo sospeso, gomiti estendono -> flettono
+  dip:{dur:2.4,accent:['uarm'],
+    A:{torso:184,head:182,uarm:150,farm:8,thigh:-16,shin:44},
+    B:{torso:190,head:186,uarm:150,farm:70,thigh:-16,shin:44}},
+  // polpacci: sale sulle punte (il corpo si alza, punte a terra)
+  calf:{dur:1.7,accent:['shin'],rise:9,
+    A:{torso:180,head:180,uarm:2,farm:2,thigh:0,shin:0},
+    B:{torso:180,head:180,uarm:2,farm:2,thigh:0,shin:0}},
+  // plank: isometrico su avambracci (micro-oscillazione)
+  plank:{dur:3,accent:['torso'],lying:'plank',
+    A:{torso:88,head:80,uarm:180,farm:250,thigh:270,shin:266},
+    B:{torso:87,head:79,uarm:180,farm:250,thigh:269,shin:265}},
+  // crunch: supino, spalle si sollevano verso il bacino
+  core:{dur:2.2,accent:['torso'],lying:'crunch',
+    A:{torso:40,head:34,uarm:120,farm:60,thigh:230,shin:20},
+    B:{torso:62,head:54,uarm:120,farm:60,thigh:230,shin:20}},
 };
 
-// tipo di attrezzo mostrato in base a variante scelta (Casa/Manubri/Palestra) + pattern
 function equipType(equip,pat){
   const CABLE=['pulldown','reardelt','triceps'];
   const BODY=['plank','core','dip','calf'];
@@ -2277,88 +2318,94 @@ function equipType(equip,pat){
     if(BODY.includes(pat)) return 'none';
     return 'barbell';
   }
-  // casa
   const BAND=['row','pulldown','latraise','reardelt','curl','triceps','ohp'];
   return BAND.includes(pat)?'band':'none';
 }
 const HT_EQUIP_LABEL={ db:'Manubri', barbell:'Bilanciere', barback:'Bilanciere (sulle spalle)', barhip:'Bilanciere (sui fianchi)', cable:'Cavo / macchina', band:'Elastico', none:'Corpo libero' };
 
-function drawEquip(type,P,dur,cx){
-  const A=P.A,B=P.B, out=[];
-  const hands=(h)=>{ // lista mani attive per prop tenuti in mano
-    if(P.view==='front'||P.view==='ohp') return [h.hand, mir(h.hand,cx)];
-    return [h.hand]; };
-  const bar=(a,b,len)=>{ // barra orizzontale centrata su giunto a/b
-    const a1=[a[0]-len,a[1]],a2=[a[0]+len,a[1]],b1=[b[0]-len,b[1]],b2=[b[0]+len,b[1]];
+// attrezzo animato: usa posizioni MONDO delle mani/spalle/anche nelle due pose
+function drawEquip(type,W,dur){
+  const out=[]; const hA=W.A.hand,hB=W.B.hand;
+  const barAt=(a,b,half)=>{ const a1=[a[0]-half,a[1]],a2=[a[0]+half,a[1]],b1=[b[0]-half,b[1]],b2=[b[0]+half,b[1]];
     return htLine('bar',a1,b1,a2,b2,dur)+htCirc('plate',a1,b1,3.4,dur)+htCirc('plate',a2,b2,3.4,dur); };
   if(type==='db'){
-    const ha=hands(A), hb=hands(B);
-    ha.forEach((h,i)=>{ out.push(htLine('bar',off(h,-4,-4),off(hb[i],-4,-4),off(h,4,4),off(hb[i],4,4),dur));
-      out.push(htCirc('load',off(h,-4,-4),off(hb[i],-4,-4),3,dur)); out.push(htCirc('load',off(h,4,4),off(hb[i],4,4),3,dur)); });
-  } else if(type==='barbell'){
-    if(P.view==='front'||P.view==='ohp'){ const hl=mir(A.hand,cx),hlb=mir(B.hand,cx);
-      out.push(htLine('bar',hl,hlb,A.hand,B.hand,dur)); out.push(htCirc('plate',hl,hlb,3.6,dur)); out.push(htCirc('plate',A.hand,B.hand,3.6,dur)); }
-    else out.push(bar(A.hand,B.hand,15));
-  } else if(type==='barback'){ out.push(bar(A.shoulder,B.shoulder,16));
-  } else if(type==='barhip'){ out.push(bar(A.hip,B.hip,13));
+    out.push(htLine('bar',[hA[0]-6,hA[1]],[hB[0]-6,hB[1]],[hA[0]+6,hA[1]],[hB[0]+6,hB[1]],dur));
+    out.push(htCirc('load',[hA[0]-6,hA[1]],[hB[0]-6,hB[1]],3,dur));
+    out.push(htCirc('load',[hA[0]+6,hA[1]],[hB[0]+6,hB[1]],3,dur));
+  } else if(type==='barbell'){ out.push(barAt(hA,hB,15));
+  } else if(type==='barback'){ out.push(barAt(W.A.sh,W.B.sh,16));
+  } else if(type==='barhip'){ out.push(barAt(W.A.hip,W.B.hip,14));
   } else if(type==='cable'){
-    out.push(`<rect class="frame" x="6" y="6" width="13" height="26" rx="2"/>`);
-    hands(A).forEach((h,i)=>{ const hb=hands(B)[i]; out.push(htLine('cable',[12,32],[12,32],h,hb,dur)); out.push(htCirc('load',h,hb,2.6,dur)); });
+    out.push(`<rect class="frame" x="6" y="6" width="12" height="24" rx="2"/>`);
+    out.push(htLine('cable',[12,30],[12,30],hA,hB,dur)); out.push(htCirc('load',hA,hB,2.6,dur));
   } else if(type==='band'){
-    const anchor=(P.view==='front'&&(A.hand[1]<40))?[cx,4]:[cx,116];
-    hands(A).forEach((h,i)=>{ const hb=hands(B)[i]; out.push(htLine('cable',anchor,anchor,h,hb,dur)); out.push(htCirc('load',h,hb,2.4,dur)); });
+    const anchor=(hA[1]<50)?[60,4]:[60,112];
+    out.push(htLine('cable',anchor,anchor,hA,hB,dur)); out.push(htCirc('load',hA,hB,2.4,dur));
   }
   return out.join('');
 }
 
 function poseFig(pat,equip){
   const P=POSES[pat]||POSES.push; const A=P.A,B=P.B, dur=P.dur||2.4, acc=new Set(P.accent||[]);
-  const cls=(s)=>acc.has(s)?'accent':'body';
-  const cxA=A.shoulder[0], cxB=B.shoulder[0], cx=(cxA+cxB)/2;
-  const parts=[];
-  const limb=(c,aj1,aj2,bj1,bj2,w1,w2,bl)=>parts.push(htPoly(c,htLimb(aj1,aj2,w1,w2,bl),htLimb(bj1,bj2,w1,w2,bl),dur));
-
-  if(P.view==='front'||P.view==='ohp'){
-    // gambe: stance simmetrica ricavata dal bacino
-    const legs=(pose)=>({hipL:off(pose.hip,-6),kneeL:off(pose.knee,-6),ankL:off(pose.ankle,-7),
-                         hipR:off(pose.hip,6),kneeR:off(pose.knee,6),ankR:off(pose.ankle,7)});
-    const la=legs(A), lb=legs(B);
-    ['L','R'].forEach(s=>{ limb(cls('thigh'),la['hip'+s],la['knee'+s],lb['hip'+s],lb['knee'+s],8,5.5,1.15);
-      limb(cls('shin'),la['knee'+s],la['ank'+s],lb['knee'+s],lb['ank'+s],5,3.5,1.05); });
-    // busto
-    limb(cls('torso'),A.shoulder,A.hip,B.shoulder,B.hip,13,8.5,1.05);
-    // braccia simmetriche
-    const rootA=off(A.shoulder,11), rootB=off(B.shoulder,11);
-    const rootAl=off(A.shoulder,-11), rootBl=off(B.shoulder,-11);
-    limb(cls('uarm'),rootA,A.elbow,rootB,B.elbow,4.4,3.4,1.2);
-    limb(cls('farm'),A.elbow,A.hand,B.elbow,B.hand,3.4,2.6,1.1);
-    limb(cls('uarm'),rootAl,mir(A.elbow,cxA),rootBl,mir(B.elbow,cxB),4.4,3.4,1.2);
-    limb(cls('farm'),mir(A.elbow,cxA),mir(A.hand,cxA),mir(B.elbow,cxB),mir(B.hand,cxB),3.4,2.6,1.1);
-    // collo + testa
-    limb('body',off(A.shoulder,0,-2),A.head,off(B.shoulder,0,-2),B.head,3.2,3,1);
-    parts.push(htCirc('head',A.head,B.head,7.5,dur));
-  } else {
-    // vista laterale
-    if(P.view==='side2'){ // affondo: gamba posteriore dietro (più chiara)
-      limb('back',A.hip,A.knee2,B.hip,B.knee2,7,5,1.12);
-      limb('back',A.knee2,A.ankle2,B.knee2,B.ankle2,4.6,3.2,1.05);
-    }
-    limb(cls('torso'),A.shoulder,A.hip,B.shoulder,B.hip,10.5,7.5,1.08);
-    // gamba anteriore
-    limb(cls('thigh'),A.hip,A.knee,B.hip,B.knee,8,5.5,1.15);
-    limb(cls('shin'),A.knee,A.ankle,B.knee,B.ankle,5,3.5,1.05);
-    // braccio
-    limb(cls('uarm'),A.shoulder,A.elbow,B.shoulder,B.elbow,4.6,3.4,1.2);
-    limb(cls('farm'),A.elbow,A.hand,B.elbow,B.hand,3.4,2.6,1.1);
-    // collo + testa
-    limb('body',A.shoulder,A.head,B.shoulder,B.head,3.2,3,1);
-    parts.push(htCirc('head',A.head,B.head,7.5,dur));
-  }
-  const eq=drawEquip(equipType(equip,pat),P,dur,cx);
-  const floorY = (P.view==='side'&&(pat==='push'||pat==='plank'||pat==='core'||pat==='hipthrust'||pat==='dip'))?116:114;
-  return `<svg viewBox="0 0 120 122" class="ht-svg" preserveAspectRatio="xMidYMid meet">`+
-    `<line class="grd" x1="12" y1="${floorY}" x2="108" y2="${floorY}"/>`+
-    eq+parts.join('')+`</svg>`;
+  const cw=(s)=>acc.has(s)?'accent':'body';
+  // root (pelvi) posizionata per tenere i piedi/appoggio a terra
+  const fa=fk(A), fb=fk(B);
+  const floorY=108, cx=58;
+  const rootFor=(f,pose)=>{
+    if(pose.lying==='bench'||pose.lying==='bridge'){ // schiena su panca: fissa le spalle
+      return [40 - f.sh[0], 66 - f.sh[1]]; }
+    if(pose.lying==='plank'){ return [38 - f.el[0], 92 - f.el[1]]; }
+    if(pose.lying==='crunch'){ return [54 - f.hip[0], 96 - f.hip[1]]; }
+    // in piedi: ancora la caviglia a terra
+    return [cx - f.an[0], floorY - f.an[1]];
+  };
+  let rA=rootFor(fa,P), rB=rootFor(fb,P);
+  if(P.rise){ rB=[rB[0], rB[1]-P.rise]; } // polpacci: il corpo si alza sulle punte
+  // posizioni mondo per l'attrezzo
+  const W={A:{hand:radd(rA,fa.hand),sh:radd(rA,fa.sh),hip:radd(rA,fa.hip)},
+           B:{hand:radd(rB,fb.hand),sh:radd(rB,fb.sh),hip:radd(rB,fb.hip)}};
+  // angoli locali (mondo - genitore) per ciascun osso
+  const loc=(w,pw)=>w-pw;
+  // FAR arm/leg (dim, dietro) — stesse angolazioni salvo varianti F
+  const farThighA=loc(A.thighF!=null?A.thighF:A.thigh,0), farThighB=loc(B.thighF!=null?B.thighF:B.thigh,0);
+  const farShinA=loc(A.shinF!=null?A.shinF:A.shin, A.thighF!=null?A.thighF:A.thigh), farShinB=loc(B.shinF!=null?B.shinF:B.shin, B.thighF!=null?B.thighF:B.thigh);
+  const footR=`<rect class="foot" x="-3" y="${RIG.shin-2}" width="${RIG.footL}" height="5" rx="2.5"/>`;
+  // gambe
+  const farLeg=`<g transform="translate(3.5,0)">`+seg(farThighA,farThighB,dur,RIG.thigh,6,4.6,'back',1.16,
+                  `<circle class="back" cx="0" cy="0" r="4.4"/>`+seg(farShinA,farShinB,dur,RIG.shin,4.4,3.2,'back',1.06,footR))+`</g>`;
+  const nearThighA=loc(A.thigh,0),nearThighB=loc(B.thigh,0);
+  const nearShinA=loc(A.shin,A.thigh),nearShinB=loc(B.shin,B.thigh);
+  const nearLeg=seg(nearThighA,nearThighB,dur,RIG.thigh,7,5,cw('thigh'),1.2,
+                  `<circle class="${cw('shin')}" cx="0" cy="0" r="4.8"/>`+seg(nearShinA,nearShinB,dur,RIG.shin,5.2,3.6,cw('shin'),1.08,footR));
+  // braccio (near) + testa dentro il gruppo TORSO
+  const uarmA=loc(A.uarm,A.torso),uarmB=loc(B.uarm,B.torso);
+  const farmA=loc(A.farm,A.uarm),farmB=loc(B.farm,B.uarm);
+  const headA=loc(A.head!=null?A.head:A.torso,A.torso),headB=loc(B.head!=null?B.head:B.torso,B.torso);
+  const hand=`<circle class="body" cx="0" cy="0" r="2.6"/>`;
+  const nearArm=seg(uarmA,uarmB,dur,RIG.uarm,5,3.8,cw('uarm'),1.24,
+                  `<circle class="${cw('farm')}" cx="0" cy="0" r="3.6"/>`+seg(farmA,farmB,dur,RIG.farm,3.8,2.8,cw('farm'),1.1,hand));
+  const farArm=`<g transform="translate(2.5,0)">`+seg(uarmA,uarmB,dur,RIG.uarm,4.2,3.2,'back',1.18,
+                  `<circle class="back" cx="0" cy="0" r="3"/>`+seg(farmA,farmB,dur,RIG.farm,3,2.2,'back',1.06,''))+`</g>`;
+  const headG=seg(headA,headB,dur,RIG.neck,3,3,'body',1,
+                  `<circle class="head" cx="0" cy="${RIG.headR}" r="${RIG.headR}"/>`);
+  // shoulder yoke (clavicola) per ampiezza spalle, al tip del torso
+  const yoke=`<circle class="${cw('torso')}" cx="0" cy="0" r="6.6"/>`;
+  const torsoChild=`${farArm}${yoke}${headG}${nearArm}`;
+  const torsoA=loc(A.torso,0),torsoB=loc(B.torso,0);
+  const torso=seg(torsoA,torsoB,dur,RIG.torso,7.2,8.2,cw('torso'),1.06,torsoChild);
+  // pelvi
+  const pelvis=`<ellipse class="${cw('torso')}" cx="0" cy="1" rx="7.4" ry="5.2"/>`;
+  const rootA=`translate(${rA[0].toFixed(1)},${rA[1].toFixed(1)})`, rootB=`translate(${rB[0].toFixed(1)},${rB[1].toFixed(1)})`;
+  const rootBob=(rA[0]!==rB[0]||rA[1]!==rB[1])?`<animateTransform attributeName="transform" type="translate" values="${rA[0].toFixed(1)},${rA[1].toFixed(1)};${rB[0].toFixed(1)},${rB[1].toFixed(1)};${rA[0].toFixed(1)},${rA[1].toFixed(1)}" dur="${dur}s" repeatCount="indefinite" keyTimes="${HT_KT}" calcMode="spline" keySplines="${HT_KS}"/>`:'';
+  const rig=`<g transform="${rootA}">${rootBob}${farLeg}${torso}${pelvis}${nearLeg}</g>`;
+  const eq=drawEquip(equipType(equip,pat),W,dur);
+  // appoggi/panca di contesto
+  let ctx='';
+  if(P.lying==='bench'||P.lying==='bridge') ctx=`<rect class="frame" x="30" y="70" width="52" height="6" rx="2"/><line class="grd" x1="12" y1="118" x2="108" y2="118"/>`;
+  else if(P.lying==='plank'||P.lying==='crunch') ctx=`<line class="grd" x1="12" y1="112" x2="108" y2="112"/>`;
+  else if(pat==='dip') ctx=`<line class="frame" x1="26" y1="60" x2="26" y2="112"/><line class="frame" x1="92" y1="60" x2="92" y2="112"/>`;
+  else ctx=`<line class="grd" x1="12" y1="${floorY}" x2="108" y2="${floorY}"/>`;
+  return `<svg viewBox="0 0 120 124" class="ht-svg" preserveAspectRatio="xMidYMid meet">${ctx}${eq}${rig}</svg>`;
 }
 
 const CUE=(setup,mov,resp,err)=>[['crosshair',setup],['move-vertical',mov],['wind',resp],['alert-triangle',err]];
