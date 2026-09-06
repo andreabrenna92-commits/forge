@@ -549,6 +549,28 @@ nav.tabs button.active svg{filter:drop-shadow(0 0 8px rgba(204,255,0,.5));}
 .fp-tab{flex:0 0 auto;display:inline-flex;align-items:center;gap:5px;padding:8px 12px;border-radius:99px;background:var(--surface-2);border:1px solid var(--border);color:var(--muted);font-weight:700;font-size:12px;white-space:nowrap;}
 .fp-tab svg{width:14px;height:14px;}
 .fp-tab.on{background:var(--volt);border-color:var(--volt);color:#04121a;}
+
+/* guida animata esercizio */
+.howto{display:inline-flex;align-items:center;gap:6px;margin:11px 0 0 34px;padding:7px 12px;border-radius:99px;
+  background:var(--volt-dim);color:var(--volt);border:1px solid rgba(0,240,255,.28);font-weight:700;font-size:11.5px;}
+.howto:active{transform:scale(.96);}
+.howto svg{width:14px;height:14px;}
+body:not([data-theme="system"]) .howto{border-color:rgba(204,255,0,.3);}
+.ht-card{max-height:88vh;overflow-y:auto;}
+.ht-eyebrow{font-family:'Orbitron','Anton',sans-serif;font-size:10px;letter-spacing:.28em;color:var(--volt);margin:2px 0 4px;}
+.ht-title{font-family:'Orbitron','Anton',sans-serif;font-size:19px;text-transform:uppercase;letter-spacing:.02em;margin-bottom:10px;line-height:1.1;}
+.ht-anim{background:var(--surface-2);border:1px solid var(--border-strong);border-radius:12px;padding:10px;display:flex;justify-content:center;margin-bottom:16px;
+  background-image:radial-gradient(circle at 50% 40%, var(--volt-dim), transparent 62%);}
+.ht-svg{width:210px;max-width:62%;height:auto;}
+.ht-svg .b,.ht-svg .a,.ht-svg .head{fill:none;stroke-linecap:round;stroke-linejoin:round;}
+.ht-svg .b{stroke:var(--muted);stroke-width:4.5;}
+.ht-svg .a{stroke:var(--volt);stroke-width:4.6;filter:drop-shadow(0 0 4px var(--volt));}
+.ht-svg .head{stroke:var(--muted);stroke-width:4;}
+.ht-svg .grd{stroke:var(--border-strong);stroke-width:2;}
+.ht-svg .w{fill:var(--volt);stroke:none;}
+.ht-cues{display:flex;flex-direction:column;gap:11px;}
+.ht-cue{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--text);line-height:1.42;}
+.ht-cue svg{width:16px;height:16px;color:var(--volt);flex:0 0 auto;margin-top:2px;}
 .fp-item .fp-n{flex:1;font-weight:700;font-size:13.5px;}
 .fp-item .fp-m{font-size:11px;color:var(--muted);}
 .fp-item svg{width:18px;height:18px;color:var(--volt);flex:0 0 auto;}
@@ -919,6 +941,17 @@ body[data-theme="system"] .plan-pill.pro{color:var(--volt);}
 
 <!-- SYSTEM NOTIFICATION (Solo Leveling HUD) -->
 <div class="sysnote" id="sysNote" aria-hidden="true"></div>
+
+<!-- GUIDA ESERCIZIO (animazione + cue) -->
+<div class="pw-overlay" id="howto">
+  <div class="pw-card ht-card">
+    <button class="pw-x" id="htClose"><i data-lucide="x"></i></button>
+    <div class="ht-eyebrow">GUIDA ESECUZIONE</div>
+    <h2 class="ht-title" id="htTitle"></h2>
+    <div class="ht-anim" id="htAnim"></div>
+    <div class="ht-cues" id="htCues"></div>
+  </div>
+</div>
 
 <!-- FOOD PICKER -->
 <div class="pw-overlay" id="foodPicker">
@@ -2153,6 +2186,142 @@ function workoutPicker(){
   </div>`;
 }
 
+/* ============================================================
+   GUIDE ANIMATE — figure stilizzate in movimento (SVG/SMIL, fatte in casa)
+   ============================================================ */
+function figAnim(A,B,o){
+  o=o||{}; const dur=o.dur||2.4; const acc=new Set(o.accent||[]);
+  const kt='0;0.5;1', ks='.42 0 .58 1;.42 0 .58 1';
+  const av=(at,a,b)=>`<animate attributeName="${at}" values="${a};${b};${a}" dur="${dur}s" repeatCount="indefinite" keyTimes="${kt}" calcMode="spline" keySplines="${ks}"/>`;
+  const seg=(j1,j2,name)=>{ if(!A[j1]||!A[j2]||!B[j1]||!B[j2])return'';
+    const cls=acc.has(name)?'a':'b';
+    return `<line class="${cls}" x1="${A[j1][0]}" y1="${A[j1][1]}" x2="${A[j2][0]}" y2="${A[j2][1]}">`+
+      av('x1',A[j1][0],B[j1][0])+av('y1',A[j1][1],B[j1][1])+av('x2',A[j2][0],B[j2][0])+av('y2',A[j2][1],B[j2][1])+`</line>`; };
+  const head=`<circle class="head" cx="${A.head[0]}" cy="${A.head[1]}" r="8">`+av('cx',A.head[0],B.head[0])+av('cy',A.head[1],B.head[1])+`</circle>`;
+  const wt=(o.weight&&A.hand&&B.hand)?`<circle class="w" cx="${A.hand[0]}" cy="${A.hand[1]}" r="5.5">`+av('cx',A.hand[0],B.hand[0])+av('cy',A.hand[1],B.hand[1])+`</circle>`:'';
+  return `<svg viewBox="0 0 120 120" class="ht-svg"><line class="grd" x1="14" y1="110" x2="106" y2="110"/>`+
+    seg('head','shoulder','neck')+seg('shoulder','hip','torso')+
+    seg('hip','knee2','thigh2')+seg('knee2','ankle2','shin2')+
+    seg('hip','knee','thigh')+seg('knee','ankle','shin')+
+    seg('shoulder','elbow','uarm')+seg('elbow','hand','farm')+
+    head+wt+`</svg>`;
+}
+const STAND={head:[60,24],shoulder:[60,37],hip:[60,68],knee:[60,90],ankle:[60,110],elbow:[60,53],hand:[60,67]};
+const ANIM={
+  squat:figAnim(
+    {head:[60,25],shoulder:[60,38],hip:[60,66],knee:[63,90],ankle:[60,110],elbow:[52,42],hand:[70,42]},
+    {head:[54,40],shoulder:[54,53],hip:[56,84],knee:[81,95],ankle:[60,110],elbow:[46,58],hand:[64,58]},
+    {accent:['thigh','shin'],weight:1,dur:2.6}),
+  lunge:figAnim(
+    {head:[60,24],shoulder:[60,37],hip:[60,66],knee:[74,88],ankle:[74,110],elbow:[58,52],hand:[58,66],knee2:[48,86],ankle2:[42,108]},
+    {head:[60,36],shoulder:[60,49],hip:[60,80],knee:[84,94],ankle:[74,110],elbow:[58,64],hand:[58,80],knee2:[48,100],ankle2:[42,110]},
+    {accent:['thigh','shin'],dur:2.6}),
+  hinge:figAnim(
+    {head:[60,24],shoulder:[60,37],hip:[60,66],knee:[59,90],ankle:[60,110],elbow:[60,52],hand:[60,68]},
+    {head:[88,46],shoulder:[80,52],hip:[60,66],knee:[57,90],ankle:[60,110],elbow:[74,66],hand:[70,82]},
+    {accent:['torso'],weight:1,dur:2.6}),
+  hipthrust:figAnim(
+    {head:[24,60],shoulder:[30,68],hip:[62,92],knee:[80,92],ankle:[88,110],elbow:[30,80],hand:[30,92]},
+    {head:[24,56],shoulder:[30,64],hip:[64,66],knee:[82,86],ankle:[88,110],elbow:[30,76],hand:[30,88]},
+    {accent:['torso','thigh'],dur:2.4}),
+  push:figAnim(
+    {head:[34,60],shoulder:[46,70],hip:[76,86],knee:[88,96],ankle:[98,104],elbow:[44,84],hand:[40,98]},
+    {head:[34,72],shoulder:[46,82],hip:[76,92],knee:[88,100],ankle:[98,106],elbow:[34,90],hand:[40,98]},
+    {accent:['uarm','farm','torso'],dur:2.2}),
+  ohp:figAnim(
+    {head:[60,26],shoulder:[60,38],hip:[60,68],knee:[60,90],ankle:[60,110],elbow:[46,40],hand:[48,26]},
+    {head:[60,26],shoulder:[60,38],hip:[60,68],knee:[60,90],ankle:[60,110],elbow:[52,20],hand:[54,6]},
+    {accent:['uarm','farm'],weight:1,dur:2.4}),
+  row:figAnim(
+    {head:[84,44],shoulder:[78,50],hip:[58,66],knee:[56,90],ankle:[58,110],elbow:[82,66],hand:[84,82]},
+    {head:[84,44],shoulder:[78,50],hip:[58,66],knee:[56,90],ankle:[58,110],elbow:[70,54],hand:[74,58]},
+    {accent:['uarm','farm'],weight:1,dur:2.4}),
+  pulldown:figAnim(
+    {head:[60,30],shoulder:[60,40],hip:[60,70],knee:[60,92],ankle:[60,110],elbow:[58,22],hand:[56,6]},
+    {head:[60,30],shoulder:[60,40],hip:[60,70],knee:[60,92],ankle:[60,110],elbow:[46,34],hand:[44,42]},
+    {accent:['uarm','farm'],dur:2.4}),
+  latraise:figAnim(
+    {head:[60,24],shoulder:[60,37],hip:[60,68],knee:[60,90],ankle:[60,110],elbow:[60,53],hand:[60,68]},
+    {head:[60,24],shoulder:[60,37],hip:[60,68],knee:[60,90],ankle:[60,110],elbow:[74,42],hand:[90,40]},
+    {accent:['uarm','farm'],weight:1,dur:2.4}),
+  reardelt:figAnim(
+    {head:[60,24],shoulder:[60,38],hip:[60,68],knee:[60,90],ankle:[60,110],elbow:[74,40],hand:[90,38]},
+    {head:[60,24],shoulder:[60,38],hip:[60,68],knee:[60,90],ankle:[60,110],elbow:[50,40],hand:[38,36]},
+    {accent:['uarm','farm'],dur:2.4}),
+  curl:figAnim(
+    {head:[60,24],shoulder:[60,38],hip:[60,68],knee:[60,90],ankle:[60,110],elbow:[60,54],hand:[66,72]},
+    {head:[60,24],shoulder:[60,38],hip:[60,68],knee:[60,90],ankle:[60,110],elbow:[60,54],hand:[52,34]},
+    {accent:['farm'],weight:1,dur:2.2}),
+  triceps:figAnim(
+    {head:[60,24],shoulder:[60,38],hip:[60,68],knee:[60,90],ankle:[60,110],elbow:[60,52],hand:[50,40]},
+    {head:[60,24],shoulder:[60,38],hip:[60,68],knee:[60,90],ankle:[60,110],elbow:[60,52],hand:[62,74]},
+    {accent:['farm'],weight:1,dur:2.2}),
+  dip:figAnim(
+    {head:[60,28],shoulder:[60,40],hip:[60,70],knee:[62,92],ankle:[64,110],elbow:[48,50],hand:[46,64]},
+    {head:[60,42],shoulder:[60,54],hip:[60,84],knee:[62,104],ankle:[64,116],elbow:[44,58],hand:[46,64]},
+    {accent:['uarm','torso'],dur:2.4}),
+  calf:figAnim(
+    {head:[60,26],shoulder:[60,39],hip:[60,70],knee:[60,92],ankle:[60,110],elbow:[60,55],hand:[60,69]},
+    {head:[60,18],shoulder:[60,31],hip:[60,62],knee:[60,84],ankle:[60,102],elbow:[60,47],hand:[60,61]},
+    {accent:['shin'],dur:1.8}),
+  plank:figAnim(
+    {head:[34,66],shoulder:[46,72],hip:[74,80],knee:[86,88],ankle:[98,94],elbow:[38,86],hand:[30,86]},
+    {head:[34,64],shoulder:[46,70],hip:[74,77],knee:[86,86],ankle:[98,92],elbow:[38,86],hand:[30,86]},
+    {accent:['torso'],dur:3}),
+  core:figAnim(
+    {head:[34,84],shoulder:[46,86],hip:[74,90],knee:[86,76],ankle:[96,88],elbow:[42,80],hand:[40,74]},
+    {head:[48,72],shoulder:[56,80],hip:[74,90],knee:[86,76],ankle:[96,88],elbow:[54,68],hand:[52,60]},
+    {accent:['torso'],dur:2.2}),
+};
+const CUE=(setup,mov,resp,err)=>[['crosshair',setup],['move-vertical',mov],['wind',resp],['alert-triangle',err]];
+const FORM_CUES={
+  squat:CUE('Piedi a larghezza spalle, punte leggermente in fuori, core attivo.','Scendi spingendo indietro i fianchi finché le cosce sono ~parallele, poi spingi coi talloni.','Inspira in discesa, espira mentre risali.','Non far collassare le ginocchia verso l\'interno né sollevare i talloni.'),
+  lunge:CUE('Passo lungo, busto eretto, sguardo avanti.','Scendi finché il ginocchio posteriore sfiora terra, poi spingi col tallone avanti.','Inspira giù, espira su.','Il ginocchio anteriore non deve superare troppo la punta del piede.'),
+  hinge:CUE('Manubri/bilanciere vicino alle gambe, ginocchia morbide, schiena neutra.','Porta indietro i fianchi facendo scorrere il peso lungo le cosce, senti i femorali allungarsi.','Inspira in discesa, espira risalendo stringendo i glutei.','Non curvare la schiena: è un movimento d\'anca, non di schiena.'),
+  hipthrust:CUE('Scapole appoggiate a una panca, piedi piantati, mento retratto.','Spingi coi talloni e solleva i fianchi fino a corpo dritto, pausa 1" in alto.','Espira spingendo su, inspira scendendo.','Non iperestendere la zona lombare: chiudi coi glutei, non con la schiena.'),
+  push:CUE('Corpo in linea (o scapole retratte sulla panca), presa poco più larga delle spalle.','Scendi controllato 2-3", sfiora il petto, poi spingi in modo esplosivo.','Inspira scendendo, espira spingendo.','Non lasciare i gomiti a 90° verso l\'esterno: ~45° dal busto.'),
+  ohp:CUE('Presa poco più larga delle spalle, core e glutei contratti, avambracci verticali.','Spingi sopra la testa fino a braccia distese, senza inarcare la schiena.','Espira spingendo su, inspira scendendo alle spalle.','Evita l\'arco lombare eccessivo: stringi gli addominali.'),
+  row:CUE('Busto inclinato ~45°, schiena neutra, braccia distese.','Tira col gomito verso il fianco, stringi le scapole a fine movimento.','Espira tirando, inspira allungando.','Non usare slancio del busto: muovi solo le braccia/scapole.'),
+  pulldown:CUE('Presa media-larga, petto in fuori, leggero inclinamento indietro.','Tira i gomiti verso il basso portando la sbarra al petto, stringi il dorso.','Espira tirando, inspira risalendo controllato.','Non tirare con lo slancio né dietro la nuca.'),
+  latraise:CUE('Manubri ai fianchi, gomiti morbidi, busto fermo.','Solleva lateralmente fino all\'altezza delle spalle, guida col gomito.','Espira salendo, inspira scendendo lento.','Niente slancio: sali lento e controlla la discesa.'),
+  reardelt:CUE('Busto inclinato o ai cavi, braccia avanti, gomiti morbidi.','Apri/tira all\'indietro portando le braccia in linea con le spalle.','Espira aprendo, inspira chiudendo.','Non incassare le spalle: movimento lento e pulito.'),
+  curl:CUE('Gomiti fermi ai fianchi, presa supina, spalle basse.','Fletti l\'avambraccio portando il peso alla spalla, contrai il bicipite.','Espira salendo, inspira scendendo.','Non muovere i gomiti in avanti né usare slancio.'),
+  triceps:CUE('Gomiti fermi e vicini al corpo (o alla testa), core attivo.','Estendi completamente l\'avambraccio, contrai il tricipite in basso/alto.','Espira estendendo, inspira tornando.','Solo l\'avambraccio si muove: il gomito resta fermo.'),
+  dip:CUE('Braccia distese sulle parallele, spalle basse, corpo leggermente avanti.','Scendi finché il braccio è ~parallelo, poi spingi verso l\'alto.','Inspira scendendo, espira spingendo.','Non scendere troppo se senti tensione alle spalle.'),
+  calf:CUE('Avampiede su un rialzo, gambe distese, corpo stabile.','Sali sulle punte il più in alto possibile, pausa 1", scendi in allungamento.','Espira salendo, inspira scendendo.','ROM completo e lento: niente rimbalzi.'),
+  plank:CUE('Gomiti sotto le spalle, corpo in linea retta, addome e glutei contratti.','Mantieni la posizione respirando in modo costante per il tempo previsto.','Respira normalmente, non trattenere il fiato.','Non far cadere i fianchi né alzarli troppo.'),
+  core:CUE('Schiena a terra, ginocchia piegate, mani al petto/tempie.','Solleva le spalle avvicinandole al bacino contraendo gli addominali.','Espira salendo, inspira scendendo.','Non tirare il collo con le mani: la spinta viene dagli addominali.'),
+};
+function inferPattern(name){
+  const n=fpNorm(name);
+  const has=(...k)=>k.some(x=>n.includes(x));
+  if(has('plank')) return 'plank';
+  if(has('calf','polpacc')) return 'calf';
+  if(has('crunch','ab wheel','ab machine','v-sit','vsit','leg raise','reverse crunch','sit-up','sit up','pallof')||n.trim()==='ab') return 'core';
+  if(has('french','pushdown','skull','overhead extension','overhead tricep','estensioni tricip','tricip')) return 'triceps';
+  if(has('dip')) return 'dip';
+  if(has('hip thrust')) return 'hipthrust';
+  if(has('stacco','rumeno','romian','rdl','leg curl','femoral')) return 'hinge';
+  if(has('affond','bulgar','split','lunge')) return 'lunge';
+  if(has('squat','pressa','leg press','hack','sissy','goblet','sumo','leg extension','wall sit')) return 'squat';
+  if(has('lento','military','shoulder press','pike','overhead press','arnold')) return 'ohp';
+  if(has('alzate lateral','lateral raise')) return 'latraise';
+  if(has('rear delt','face pull','reverse fly','reverse pec','band pull','pull-apart','pull apart','rear-delt')) return 'reardelt';
+  if(has('lat machine','pulldown','pull-down','pull down','trazion','pull-up','pull up','pullup','australian')) return 'pulldown';
+  if(has('rematore','row','pulley','pendlay')) return 'row';
+  if(has('curl')) return 'curl';
+  if(has('panca','push-up','push up','pushup','distensioni','chest press','croci','pec-deck','pec deck','fly','archer','military press? ')) return 'push';
+  return 'push';
+}
+function openHowTo(pat,name){
+  const a=ANIM[pat]||ANIM.push; const cues=FORM_CUES[pat]||FORM_CUES.push;
+  document.getElementById('htTitle').textContent=name||'';
+  document.getElementById('htAnim').innerHTML=a;
+  document.getElementById('htCues').innerHTML=cues.map(c=>`<div class="ht-cue"><i data-lucide="${c[0]}"></i><span>${c[1]}</span></div>`).join('');
+  document.getElementById('howto').classList.add('show'); buzz(8); lucide.createIcons();
+}
+function closeHowTo(){ document.getElementById('howto').classList.remove('show'); document.getElementById('htAnim').innerHTML=''; }
+
 function viewTrain(){
   const dk=dayKey(activeDayIdx);
   const wid=effWorkoutId(activeDayIdx);
@@ -2210,6 +2379,7 @@ function viewTrain(){
             </div>
           </div>
           <div class="ex-note">${note}</div>
+          <button class="howto" data-howto="${inferPattern(exName)}" data-exn="${encodeURIComponent(exName)}"><i data-lucide="play-circle"></i> Come si esegue</button>
           <div class="sets">
             ${Array.from({length:e.sets}).map((_,s)=>`<button class="setbtn ${r.sets[wid+'_'+ei+'_'+s]?'done':''}" data-set="${wid+'_'+ei+'_'+s}">${s+1}</button>`).join('')}
           </div>
@@ -2937,6 +3107,8 @@ function bindDynamic(){
   });
   // mini timer
   main.querySelectorAll('[data-timer]').forEach(el=>el.onclick=()=>openTimer(+el.dataset.timer));
+  // guida animata esercizio
+  main.querySelectorAll('[data-howto]').forEach(el=>el.onclick=()=>openHowTo(el.dataset.howto, decodeURIComponent(el.dataset.exn)));
   // workout picker: assegna scheda alla data selezionata
   main.querySelectorAll('[data-wset]').forEach(el=>el.onclick=()=>{
     state.overrides[fmt(dateOf(activeDayIdx))]=el.dataset.wset; save(); render();
@@ -3189,6 +3361,8 @@ document.querySelectorAll('#pwPlans .pw-plan').forEach(b=>b.onclick=()=>{
 });
 document.getElementById('fpClose').onclick=closeFoodPicker;
 document.getElementById('foodPicker').addEventListener('click',e=>{ if(e.target.id==='foodPicker') closeFoodPicker(); });
+document.getElementById('htClose').onclick=closeHowTo;
+document.getElementById('howto').addEventListener('click',e=>{ if(e.target.id==='howto') closeHowTo(); });
 document.getElementById('fpSearch').addEventListener('input',e=>{ fpQuery=e.target.value; renderFpList(); });
 
 /* ============================================================
