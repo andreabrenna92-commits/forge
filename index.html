@@ -1213,10 +1213,162 @@ const WORKOUTS_FB = {
     ]},
 };
 
+/* ============================================================
+   UPPER/LOWER 4+1 — piano Massa (nov 2026)
+   Lun=Upper A · Mar=Lower A · Gio=Upper B · Ven=Lower B · Sab=Upper C (facoltativo)
+   Reps/recuperi fissi per esercizio (fixedScheme): doppia progressione, RIR 1–2,
+   ciclo 6 settimane con scarico nella 6ª (stessi carichi, metà serie).
+   ============================================================ */
+const SCHEDULE_UL = { mon:'UA', tue:'LA', wed:null, thu:'UB', fri:'LB', sat:'UC', sun:null };
+const WORKOUTS_UL = {
+  UA:{ title:'Upper A', focus:'Forza · Petto · Dorso · Braccia',
+    ex:[
+      {sets:4, reps:'6–8', rpe:'8–9', rest:180, main:true, load:true,
+        gym:{n:'Panca piana bilanciere', note:'Scapole retratte, piedi piantati. Sali di 2,5 kg quando chiudi 4×8.'},
+        db:{n:'Distensioni manubri su panca', note:'Discesa 2-3", spinta esplosiva. +1–2 kg quando chiudi 4×8.'},
+        home:{n:'Push-up piedi rialzati', reps:'8–15', note:'Pausa 2" al petto. Zavorra con zaino quando superi 15.'} },
+      {sets:4, reps:'8–10', rpe:'8–9', rest:150, main:true, load:true,
+        gym:{n:'Rematore bilanciere / chest-supported row', note:'Tira al basso ventre, stringi le scapole. Niente slancio.'},
+        db:{n:'Rematore manubri busto a 45°', note:'Gomiti vicini al corpo, pausa 1" in alto.'},
+        home:{n:'Rematore con elastico', reps:'12–15', note:'Tira col gomito, contrai la scapola.'} },
+      {sets:3, reps:'8–10', rpe:'8', rest:120, load:true,
+        gym:{n:'Military press manubri seduto', note:'Schienale quasi verticale, niente arco lombare.'},
+        db:{n:'Military press manubri seduto', note:'Schienale quasi verticale, niente arco lombare.'},
+        home:{n:'Pike push-up', reps:'8–12', note:'Bacino alto a V, spinta verticale.'} },
+      {sets:3, reps:'10–12', rpe:'8', rest:90, load:true,
+        gym:{n:'Lat machine presa prona', note:'Petto in fuori, porta la sbarra allo sterno.'},
+        db:{n:'Pullover manubrio / rematore 1 braccio', note:'Allungamento del gran dorsale.'},
+        home:{n:'Australian pull-up (sotto un tavolo)', note:'Corpo rigido, petto al bordo.'} },
+      {sets:2, reps:'12–15', rpe:'9', rest:60, load:true,
+        gym:{n:'Croci ai cavi', note:'Strizza a fine corsa, braccia morbide.'},
+        db:{n:'Croci manubri', note:'Massimo allungamento, non toccare in basso.'},
+        home:{n:'Push-up larghi lenti', note:'3" in discesa, allunga il petto.'} },
+      {sets:3, reps:'10–12', rpe:'9', rest:60, load:true,
+        gym:{n:'Curl manubri su panca inclinata', note:'Massimo allungamento del bicipite, gomiti fermi.'},
+        db:{n:'Curl manubri su panca inclinata', note:'Massimo allungamento del bicipite, gomiti fermi.'},
+        home:{n:'Curl con elastico', note:'Supinazione completa, gomito fermo.'} },
+      {sets:3, reps:'10–12', rpe:'9', rest:60, load:true,
+        gym:{n:'Pushdown tricipiti al cavo', note:'Gomiti incollati ai fianchi, estensione completa.'},
+        db:{n:'Skull crusher manubri', note:'Gomiti puntati al soffitto, fermi.'},
+        home:{n:'Dips tra due sedie', note:'Scendi a 90°, tricipiti.'} },
+    ]},
+  LA:{ title:'Lower A', focus:'Squat · Quadricipiti · Femorali',
+    ex:[
+      {sets:4, reps:'6–8', rpe:'8–9', rest:180, main:true, load:true,
+        gym:{n:'Squat bilanciere', note:'Scendi almeno al parallelo, core bloccato. +2,5 kg quando chiudi 4×8.'},
+        db:{n:'Squat goblet manubrio', reps:'8–12', note:'Manubrio al petto, scendi sotto il parallelo.'},
+        home:{n:'Squat bulgaro (corpo libero)', reps:'10–15/gamba', note:'Pausa 1" in basso per aumentare la difficoltà.'} },
+      {sets:3, reps:'8–10', rpe:'8', rest:150, main:true, load:true,
+        gym:{n:'Stacco rumeno bilanciere', note:'Fianchi indietro, schiena neutra, senti i femorali.'},
+        db:{n:'Stacchi rumeni manubri', note:'Ginocchia morbide, manubri lungo le cosce.'},
+        home:{n:'Stacco rumeno monopodalico', reps:'10–12/gamba', note:'Schiena neutra, allunga i femorali.'} },
+      {sets:3, reps:'10–12', rpe:'8', rest:120, load:true,
+        gym:{n:'Leg press', note:'Piedi a metà pedana, ROM completo senza staccare il bacino.'},
+        db:{n:'Affondi camminati manubri', reps:'10/gamba', note:'Passo lungo, busto eretto.'},
+        home:{n:'Affondi camminati', reps:'12/gamba', note:'Ginocchio posteriore quasi a terra.'} },
+      {sets:3, reps:'10–12', rpe:'9', rest:90, load:true,
+        gym:{n:'Leg curl seduto', note:'Pausa 1" in contrazione, ritorno lento.'},
+        db:{n:'Leg curl con manubrio (prono)', note:'Movimento lento, niente slancio.'},
+        home:{n:'Ponte femorali monopodalico', note:'Talloni lontani, spingi coi talloni.'} },
+      {sets:4, reps:'10–15', rpe:'9', rest:60, load:true,
+        gym:{n:'Calf raise in piedi', note:'Pausa 1" in alto e 1" in allungamento.'},
+        db:{n:'Calf raise monopodalico + manubrio', note:'Su uno scalino, ROM completo.'},
+        home:{n:'Calf raise monopodalico su scalino', reps:'15–20', note:'Pausa 1" in alto, scendi lento.'} },
+      {sets:3, reps:'10–15', rpe:'9', rest:60,
+        gym:{n:'Crunch ai cavi', note:'Arrotola il busto, non tirare con le braccia.'},
+        db:{n:'Crunch con peso', note:'Contrai, non tirare il collo.'},
+        home:{n:'Reverse crunch', note:'Addome basso, controllo.'} },
+    ]},
+  UB:{ title:'Upper B', focus:'Ipertrofia · Petto alto · Spalle · Dorso',
+    ex:[
+      {sets:4, reps:'8–10', rpe:'8–9', rest:150, main:true, load:true,
+        gym:{n:'Panca inclinata manubri', note:'Panca a 30°, discesa controllata, petto alto.'},
+        db:{n:'Distensioni inclinate manubri', note:'Panca a 30°, discesa controllata.'},
+        home:{n:'Push-up decline con pausa', reps:'10–15', note:'Piedi elevati, pausa 2" in basso.'} },
+      {sets:4, reps:'6–10', rpe:'8–9', rest:150, main:true, load:true,
+        gym:{n:'Trazioni (assistite o zavorrate)', note:'Presa prona media. Sopra le 10 reps aggiungi zavorra.'},
+        db:{n:'Rematore manubri prono largo', reps:'10–12', note:'Gomiti larghi → upper back.'},
+        home:{n:'Trazioni / Australian pull-up', note:'Se serve assistite con elastico.'} },
+      {sets:3, reps:'10–12', rpe:'8', rest:90, load:true,
+        gym:{n:'Rematore manubrio a un braccio', note:'Tira al fianco, niente torsione del busto.'},
+        db:{n:'Rematore manubrio a un braccio', note:'Tira al fianco, niente torsione del busto.'},
+        home:{n:'Rematore elastico 1 braccio', note:'Contrazione scapolare a fine movimento.'} },
+      {sets:4, reps:'12–15', rpe:'9', rest:60, load:true,
+        gym:{n:'Alzate laterali manubri / cavo', note:'Lento, niente slancio. Deltoide medio.'},
+        db:{n:'Alzate laterali manubri', note:'Controllato, gomito leggermente piegato.'},
+        home:{n:'Alzate laterali con elastico', note:'Movimento lento, tensione costante.'} },
+      {sets:3, reps:'12–15', rpe:'9', rest:60,
+        gym:{n:'Face pull ai cavi', note:'Tira verso la fronte aprendo i gomiti.'},
+        db:{n:'Rear delt fly manubri', note:'Busto inclinato, apri lento.'},
+        home:{n:'Face pull con elastico', note:'Postura + spalla posteriore.'} },
+      {sets:3, reps:'10–12', rpe:'9', rest:60, load:true,
+        gym:{n:'French press al cavo sopra la testa', note:'Capo lungo del tricipite, gomiti vicini alla testa.'},
+        db:{n:'Overhead tricep extension manubrio', note:'Gomiti vicini alla testa, allungamento.'},
+        home:{n:'Estensioni tricipiti sopra la testa (elastico)', note:'Capo lungo del tricipite.'} },
+      {sets:3, reps:'10–12', rpe:'9', rest:60, load:true,
+        gym:{n:'Curl a martello', note:'Presa neutra: brachiale + avambracci.'},
+        db:{n:'Curl a martello', note:'Presa neutra, gomiti fermi.'},
+        home:{n:'Curl martello con elastico', note:'Presa neutra, controllo.'} },
+    ]},
+  LB:{ title:'Lower B', focus:'Anca · Glutei · Femorali',
+    ex:[
+      {sets:4, reps:'8–10', rpe:'8–9', rest:150, main:true, load:true,
+        gym:{n:'Hip thrust bilanciere', note:'Pausa 1" in alto, mento retratto, chiudi coi glutei.'},
+        db:{n:'Hip thrust manubrio', reps:'10–15', note:'Pausa 1" in alto.'},
+        home:{n:'Hip thrust monopodalico', reps:'12–15', note:'Spingi coi talloni.'} },
+      {sets:3, reps:'8–10/gamba', rpe:'8–9', rest:120, main:true, load:true,
+        gym:{n:'Squat bulgaro manubri', note:'Busto leggermente inclinato per più gluteo.'},
+        db:{n:'Squat bulgaro manubri', note:'Busto leggermente inclinato per più gluteo.'},
+        home:{n:'Squat bulgaro (corpo libero)', reps:'12–15/gamba', note:'Pausa 1" in basso.'} },
+      {sets:3, reps:'12–15', rpe:'9', rest:90, load:true,
+        gym:{n:'Leg extension', note:'Strizza in alto 1", quadricipite isolato.'},
+        db:{n:'Squat goblet tempo 3-1-1', note:'Discesa 3", pausa in basso.'},
+        home:{n:'Sissy squat', note:'Focus quadricipite, controllo.'} },
+      {sets:3, reps:'10–12', rpe:'9', rest:90, load:true,
+        gym:{n:'Leg curl sdraiato', note:'Bacino a contatto con la panca, ritorno lento.'},
+        db:{n:'Stacchi rumeni manubri', note:'Allungamento dei femorali.'},
+        home:{n:'Stacco rumeno monopodalico', note:'Schiena neutra.'} },
+      {sets:4, reps:'12–15', rpe:'9', rest:60, load:true,
+        gym:{n:'Calf raise seduto', note:'Soleo: pausa in allungamento.'},
+        db:{n:'Calf raise seduto con manubri', note:'Manubri sulle ginocchia, ROM pieno.'},
+        home:{n:'Calf raise monopodalico', reps:'15–20', note:'ROM pieno, pausa in alto.'} },
+      {sets:3, reps:'10–15', rpe:'9', rest:60,
+        gym:{n:'Hanging leg raise', note:'Niente oscillazioni, porta il bacino in retroversione.'},
+        db:{n:'Leg raise a terra', note:'Zona lombare a terra.'},
+        home:{n:'Leg raise / reverse crunch', note:'Addome basso, controllo.'} },
+    ]},
+  UC:{ title:'Upper C (facoltativo)', focus:'Spalle · Braccia · Petto alto',
+    ex:[
+      {sets:3, reps:'12–15', rpe:'9', rest:90, load:true,
+        gym:{n:'Croci ai cavi dal basso', note:'Dal basso verso l\'alto: petto alto. Solo se hai dormito ≥7 h.'},
+        db:{n:'Croci su panca inclinata', note:'Allungamento, controllo.'},
+        home:{n:'Push-up decline lenti', note:'Petto alto, 3" in discesa.'} },
+      {sets:4, reps:'12–15', rpe:'9', rest:60, load:true,
+        gym:{n:'Alzate laterali al cavo', note:'Tensione costante su tutto l\'arco.'},
+        db:{n:'Alzate laterali manubri', note:'Niente slancio.'},
+        home:{n:'Alzate laterali con elastico', note:'Lento e controllato.'} },
+      {sets:3, reps:'15', rpe:'9', rest:60, load:true,
+        gym:{n:'Rear delt fly ai cavi / reverse pec-deck', note:'Spalla posteriore, apri lento.'},
+        db:{n:'Rear delt fly manubri', note:'Busto inclinato.'},
+        home:{n:'Band pull-apart', reps:'20', note:'Scapole che si avvicinano.'} },
+      {sets:3, reps:'12', rpe:'9', rest:60, load:true,
+        gym:{n:'Curl ai cavi', note:'Tensione costante, gomiti fermi.'},
+        db:{n:'Curl manubri alternati', note:'Supinazione completa.'},
+        home:{n:'Curl con elastico', note:'Supinazione completa.'} },
+      {sets:3, reps:'10–12', rpe:'9', rest:90, load:true,
+        gym:{n:'Dip alle parallele', note:'Busto eretto per i tricipiti. Zavorra sopra le 12.'},
+        db:{n:'Dips su sedia + zaino', note:'Carico progressivo.'},
+        home:{n:'Dips tra due sedie', note:'Scendi a 90°.'} },
+    ]},
+};
+/* target del piano Massa (kcal fisse + macro), adattati dal report settimanale */
+const UL_TARGETS = { train:{kcal:2700, pro:178, fat:72}, rest:{kcal:2350, pro:172, fat:80} };
+
 /* ---- Registro programmi selezionabili ---- */
 const PROGRAMS = {
   upper:    { name:'Upper Focus', desc:'Split A/B/C/D orientato al frame builder', schedule:SCHEDULE_UPPER, workouts:WORKOUTS_UPPER, wshort:{A:'Push',B:'Lower',C:'Pull',D:'Upper'} },
   fullbody: { name:'Full-Body 3×', desc:'Ipertrofia, frequenza alta, ideale per chi viaggia', schedule:SCHEDULE_FB, workouts:WORKOUTS_FB, wshort:{FA:'Full A',FB:'Full B',FC:'Full C'} },
+  ul5:      { name:'Massa Upper/Lower', desc:'Palestra 4 giorni + sabato facoltativo, piano Massa nov 2026', schedule:SCHEDULE_UL, workouts:WORKOUTS_UL, wshort:{UA:'Up A',LA:'Low A',UB:'Up B',LB:'Low B',UC:'Up C'}, fixedScheme:true, targets:UL_TARGETS },
 };
 function programKey(){ return state.profile.program || (goal().key==='mass'?'fullbody':'upper'); }
 function activeProgram(){ return PROGRAMS[programKey()]||PROGRAMS.upper; }
@@ -1262,6 +1414,7 @@ const GOAL_SCHEME={
 function scheme(){ return GOAL_SCHEME[goal().key]||GOAL_SCHEME.recomp; }
 function exScheme(e,ei,mode){
   const sc=scheme(); const v=e[mode]||e.db; const baseReps=v.reps||e.reps;
+  if(activeProgram().fixedScheme) return {reps:baseReps,rpe:e.rpe,rest:e.rest||(e.main?150:75),main:!!e.main};
   if(e.rpe==='-') return {reps:baseReps,rpe:e.rpe,rest:sc.restAcc,main:false}; // tenute/plank invariate
   const main=ei<2;
   let reps=main?sc.repsMain:sc.repsAcc;
@@ -1464,133 +1617,111 @@ const M = { huelBase:{ alts:[
    alts: alternative PRO {name, items, kcal, pro} (cho/fat stimati a runtime)
    ============================================================ */
 const MEALS = {
+  /* Piano Massa nov 2026 — allenamento ~2.700 kcal (lun/mar/gio/ven/sab) · riposo ~2.350 kcal (mer/dom)
+     Pasto pre/post allenamento entro 60–90' dalla seduta. Burro d'arachidi 25–30 g/giorno. */
   mon:[
-    {id:'m1',slot:'Colazione',name:'Huel + banana',foods:[['huel',2],['latteavena',300],['banana',1]],
-      alts:[{name:'Porridge + frutta',items:'60g avena + 1 scoop whey + 250ml latte avena + 1 banana',kcal:550,pro:40},
-            {name:'Pancake proteici',items:'2 uova + 50g avena + 1 scoop whey + frutti di bosco',kcal:550,pro:44}]},
-    {id:'m2',slot:'Pranzo',name:'Pollo + riso basmati',foods:[['pollo',180],['riso',200],['zucchine',150],['evo',1]],
-      alts:[{name:'Tacchino + riso',items:'180g fesa tacchino + 200g riso basmati + zucchine + EVO',kcal:620,pro:46},
-            {name:'Tofu/seitan + riso',items:'200g tofu/seitan saltato + 200g riso + zucchine + EVO',kcal:620,pro:40},
-            {name:'Huel + riso',items:'2 misurini Huel + 150g riso a parte + verdure',kcal:620,pro:44},
-            {name:'Gamberi + riso',items:'200g gamberi saltati + 200g riso + zucchine + EVO',kcal:620,pro:42},
-            {name:'Poke bowl pollo',items:'160g pollo + 180g riso + edamame + avocado ¼ + soia',kcal:620,pro:44}]},
-    {id:'m3',slot:'Spuntino',name:'Yogurt greco + mandorle',foods:[['yogurtgreco',200],['mandorle',20],['miele',1]],
-      alts:[{name:'Skyr + noci',items:'200g skyr + 15g noci + miele',kcal:280,pro:24},
-            {name:'Whey + frutta secca',items:'1 scoop whey + 200ml acqua + 20g mandorle',kcal:280,pro:28}]},
-    {id:'m4',slot:'Cena',name:'Salmone + patate dolci',foods:[['salmone',180],['patatedolci',150],['insalata',80],['evo',1]],
-      alts:[{name:'Branzino + patate dolci',items:'180g branzino + 150g patate dolci + insalata + EVO',kcal:550,pro:38},
-            {name:'Trota + patate dolci',items:'180g trota al forno + 150g patate dolci + insalata',kcal:550,pro:40},
-            {name:'Manzo + patate',items:'170g fettine manzo magro + 150g patate + insalata',kcal:550,pro:42},
-            {name:'Pollo + patate dolci',items:'160g pollo + 150g patate dolci + insalata + EVO',kcal:550,pro:44},
-            {name:'Frittata + patate',items:'4 uova + 30g grana + 150g patate dolci + insalata',kcal:550,pro:36}]},
-    {id:'m5',slot:'Pre-nanna',name:'Ricotta + cacao',foods:[['ricotta',200],['cacao',1]],
-      alts:[{name:'Caseine',items:'1 scoop caseine + 250ml acqua/latte',kcal:220,pro:24},
-            {name:'Yogurt greco',items:'200g yogurt greco 0% + cannella',kcal:200,pro:18}]},
+    {id:'m1',slot:'Colazione',name:'Huel + banana + arachidi',foods:[['huel',2],['banana',1],['burroarachidi',1]],
+      alts:[{name:'Porridge + frutta',items:'80g avena + 1 scoop whey + 250ml latte avena + 1 banana',kcal:600,pro:42},
+            {name:'Uova + pane',items:'3 uova + 3 fette pane integrale + 1 banana',kcal:600,pro:32}]},
+    {id:'m2',slot:'Pranzo',name:'Pollo + riso basmati',foods:[['pollo',120],['riso',340],['zucchine',150],['evo',1]],
+      alts:[{name:'Tacchino + riso',items:'130g fesa tacchino + 340g riso cotto + zucchine + EVO',kcal:750,pro:48},
+            {name:'Gamberi + riso',items:'180g gamberi + 340g riso cotto + zucchine + EVO',kcal:750,pro:46},
+            {name:'Poke bowl pollo',items:'120g pollo + 300g riso + edamame + ¼ avocado + soia',kcal:750,pro:46}]},
+    {id:'m3',slot:'Spuntino',name:'Pre/post workout · Yogurt greco + avena + miele',foods:[['yogurtgreco',200],['avena',40],['miele',1],['mela',1]],
+      alts:[{name:'Whey + gallette + banana',items:'1 scoop whey + 40g gallette di riso + 1 banana',kcal:430,pro:30},
+            {name:'Skyr + muesli',items:'200g skyr + 50g muesli + 1 frutto',kcal:430,pro:28}]},
+    {id:'m4',slot:'Cena',name:'Salmone + patate + pane',foods:[['salmone',150],['patate',300],['pane',2],['insalata',80]],
+      alts:[{name:'Trota + patate',items:'170g trota + 300g patate + 2 fette pane + insalata',kcal:720,pro:44},
+            {name:'Manzo + patate',items:'150g manzo magro + 300g patate + 2 fette pane + insalata',kcal:720,pro:46},
+            {name:'Pollo + patate dolci',items:'150g pollo + 350g patate dolci + 2 fette pane + insalata',kcal:720,pro:52}]},
+    {id:'m5',slot:'Pre-nanna',name:'Skyr + arachidi + cacao',foods:[['skyr',200],['burroarachidi',1],['cacao',1]],
+      alts:[{name:'Caseine + arachidi',items:'1 scoop caseine + 250ml latte + 1 cucchiaio burro arachidi',kcal:230,pro:28},
+            {name:'Fiocchi di latte',items:'200g fiocchi di latte + cannella',kcal:200,pro:22}]},
   ],
   tue:[
-    {id:'m1',slot:'Colazione',name:'Huel Black',foods:[['huel',2]],alts:M.huelBase.alts},
-    {id:'m2',slot:'Pranzo',name:'Uova + salmone affumicato',foods:[['uovo',3],['salmoneaff',100],['pane',2],['pomodori',100]],
-      alts:[{name:'Frittata + tonno',items:'3 uova + 100g tonno + 2 fette pane integrale + pomodori',kcal:520,pro:44},
-            {name:'Tacchino + uova',items:'2 uova + 120g tacchino arrosto + 2 fette pane integrale',kcal:520,pro:46},
-            {name:'Bresaola + grana',items:'90g bresaola + 30g grana + 2 fette pane integrale + rucola',kcal:520,pro:44},
-            {name:'Pollo + hummus wrap',items:'150g pollo + piadina integrale + hummus + insalata',kcal:520,pro:42}]},
-    {id:'m3',slot:'Spuntino',name:'Whey + mela',foods:[['whey',1],['mela',1]],
-      alts:[{name:'Yogurt greco + frutta',items:'200g yogurt greco 0% + 1 mela',kcal:200,pro:20},
-            {name:'Skyr',items:'200g skyr + cannella',kcal:200,pro:24}]},
-    {id:'m4',slot:'Cena',name:'Merluzzo + riso integrale',foods:[['merluzzo',200],['risoint',120],['broccoli',150],['evo',1]],
-      alts:[{name:'Nasello + riso',items:'200g nasello + 120g riso integrale + broccoli + EVO',kcal:480,pro:44},
-            {name:'Pollo + riso',items:'150g pollo + 120g riso integrale + broccoli + EVO',kcal:480,pro:46},
-            {name:'Gamberi + riso',items:'200g gamberi + 120g riso integrale + broccoli + EVO',kcal:480,pro:42},
-            {name:'Tofu + riso',items:'200g tofu + 120g riso integrale + broccoli + soia',kcal:480,pro:36}]},
-    {id:'m5',slot:'Pre-nanna',name:'Yogurt greco + noci',foods:[['yogurtgreco',200],['noci',15]],
-      alts:[{name:'Caseine',items:'1 scoop caseine + 250ml acqua',kcal:220,pro:24},
-            {name:'Ricotta',items:'200g ricotta magra',kcal:220,pro:18}]},
+    {id:'m1',slot:'Colazione',name:'Huel + banana + arachidi',foods:[['huel',2],['banana',1],['burroarachidi',1]],
+      alts:[{name:'Porridge + frutta',items:'80g avena + 1 scoop whey + 250ml latte avena + 1 banana',kcal:600,pro:42}]},
+    {id:'m2',slot:'Pranzo',name:'Tonno + pasta al pomodoro',foods:[['tonno',130],['pastabianca',320],['pomodori',100],['evo',1]],
+      alts:[{name:'Pollo + pasta',items:'130g pollo + 320g pasta cotta + pomodoro + EVO',kcal:760,pro:52},
+            {name:'Ragù di tacchino + pasta',items:'150g macinato tacchino + 320g pasta cotta + pomodoro',kcal:760,pro:54},
+            {name:'Salmone + pasta',items:'120g salmone + 300g pasta cotta + zucchine + EVO',kcal:760,pro:42}]},
+    {id:'m3',slot:'Spuntino',name:'Pre/post workout · Yogurt greco + avena + banana',foods:[['yogurtgreco',200],['avena',40],['miele',1],['banana',1]],
+      alts:[{name:'Whey + gallette + banana',items:'1 scoop whey + 40g gallette di riso + 1 banana',kcal:440,pro:30}]},
+    {id:'m4',slot:'Cena',name:'Manzo + patate + verdure',foods:[['manzo',140],['patate',300],['pane',2],['verduregrigliate',200]],
+      alts:[{name:'Hamburger magro + patate',items:'2 burger manzo magro (160g) + 300g patate + verdure',kcal:700,pro:48},
+            {name:'Tacchino + patate',items:'170g tacchino + 300g patate + 2 fette pane + verdure',kcal:700,pro:54},
+            {name:'Salmone + patate',items:'150g salmone + 300g patate + 2 fette pane + verdure',kcal:700,pro:44}]},
+    {id:'m5',slot:'Pre-nanna',name:'Skyr + arachidi + cacao',foods:[['skyr',200],['burroarachidi',1],['cacao',1]],
+      alts:[{name:'Caseine + arachidi',items:'1 scoop caseine + 250ml latte + 1 cucchiaio burro arachidi',kcal:230,pro:28}]},
   ],
   wed:[
-    {id:'m1',slot:'Colazione',name:'Huel + avena + frutti di bosco',foods:[['huel',2],['latteavena',300],['avena',50],['fruttibosco',80]],
-      alts:[{name:'Porridge completo',items:'70g avena + 1 scoop whey + 250ml latte avena + frutti di bosco',kcal:600,pro:42},
-            {name:'Uova + avena',items:'3 uova + 50g avena + frutti di bosco + 1 cucchiaino miele',kcal:600,pro:40}]},
-    {id:'m2',slot:'Pranzo',name:'Tonno + pasta integrale',foods:[['tonno',180],['pasta',200],['pomodori',100],['evo',1]],
-      alts:[{name:'Pollo + pasta',items:'160g pollo + 200g pasta integrale + pomodoro + EVO',kcal:620,pro:46},
-            {name:'Sgombro + pasta',items:'150g sgombro + 200g pasta integrale + pomodoro',kcal:620,pro:44},
-            {name:'Ceci + pasta',items:'200g ceci + 180g pasta integrale + pomodoro + EVO',kcal:620,pro:34},
-            {name:'Salmone + pasta',items:'150g salmone + 200g pasta integrale + zucchine + EVO',kcal:620,pro:42},
-            {name:'Ragù di tacchino + pasta',items:'180g macinato tacchino + 200g pasta + pomodoro',kcal:620,pro:48}]},
-    {id:'m3',slot:'Spuntino',name:'Barretta proteica + arancia',foods:[['barretta',1],['arancia',1]],
-      alts:[{name:'Whey + frutta',items:'1 scoop whey + 1 arancia + 10g mandorle',kcal:250,pro:26},
-            {name:'Yogurt + miele',items:'200g yogurt greco + miele + 1 arancia',kcal:250,pro:20}]},
-    {id:'m4',slot:'Cena',name:'Manzo + verdure grigliate',foods:[['manzo',200],['verduregrigliate',250],['patate',100]],
-      alts:[{name:'Tacchino + verdure',items:'200g tacchino + verdure grigliate + 100g patate',kcal:540,pro:46},
-            {name:'Pollo + verdure',items:'200g pollo + verdure grigliate + 100g patate',kcal:540,pro:48},
-            {name:'Salmone + verdure',items:'180g salmone + verdure grigliate + 100g patate',kcal:540,pro:38},
-            {name:'Hamburger magro + verdure',items:'2 burger manzo magro (180g) + verdure + 100g patate',kcal:540,pro:44}]},
-    {id:'m5',slot:'Pre-nanna',name:'Ricotta + cannella',foods:[['ricotta',200],['miele',1]],
-      alts:[{name:'Caseine',items:'1 scoop caseine + 250ml acqua',kcal:220,pro:24}]},
+    {id:'m1',slot:'Colazione',name:'Huel + banana + arachidi',foods:[['huel',2],['banana',1],['burroarachidi',1]],
+      alts:[{name:'Uova + pane',items:'3 uova + 3 fette pane integrale + 1 banana',kcal:600,pro:32}]},
+    {id:'m2',slot:'Pranzo',name:'Pollo + riso (riposo)',foods:[['pollo',130],['riso',260],['zucchine',150],['evo',1]],
+      alts:[{name:'Tacchino + riso',items:'150g tacchino + 260g riso cotto + zucchine + EVO',kcal:660,pro:50},
+            {name:'Tonno + riso',items:'150g tonno + 260g riso cotto + zucchine + EVO',kcal:660,pro:46}]},
+    {id:'m3',slot:'Spuntino',name:'Yogurt greco + noci',foods:[['yogurtgreco',200],['noci',30]],
+      alts:[{name:'Skyr + mandorle',items:'200g skyr + 30g mandorle',kcal:310,pro:28},
+            {name:'Whey + frutta secca',items:'1 scoop whey + 30g mandorle',kcal:310,pro:30}]},
+    {id:'m4',slot:'Cena',name:'Merluzzo + patate + broccoli',foods:[['merluzzo',220],['patate',250],['pane',2],['broccoli',150],['evo',1]],
+      alts:[{name:'Branzino + patate',items:'200g branzino + 250g patate + 2 fette pane + broccoli + EVO',kcal:670,pro:46},
+            {name:'Pollo + patate',items:'150g pollo + 250g patate + 2 fette pane + broccoli + EVO',kcal:670,pro:54}]},
+    {id:'m5',slot:'Pre-nanna',name:'Skyr + cacao',foods:[['skyr',200],['cacao',1]],
+      alts:[{name:'Caseine',items:'1 scoop caseine + 250ml acqua',kcal:140,pro:24}]},
   ],
   thu:[
-    {id:'m1',slot:'Colazione',name:'Huel Black',foods:[['huel',2]],alts:M.huelBase.alts},
-    {id:'m2',slot:'Pranzo',name:'Tacchino + quinoa',foods:[['tacchino',150],['quinoa',180],['spinaci',150],['evo',1]],
-      alts:[{name:'Pollo + quinoa',items:'150g pollo + 180g quinoa + spinaci + EVO',kcal:560,pro:46},
-            {name:'Salmone + quinoa',items:'150g salmone + 160g quinoa + spinaci + EVO',kcal:560,pro:40},
-            {name:'Gamberi + quinoa',items:'180g gamberi + 180g quinoa + spinaci + EVO',kcal:560,pro:42},
-            {name:'Tempeh + quinoa',items:'180g tempeh + 180g quinoa + spinaci + EVO',kcal:560,pro:38}]},
-    {id:'m3',slot:'Spuntino',name:'Yogurt greco + noci + pera',foods:[['yogurtgreco',200],['noci',20],['pera',1]],
-      alts:[{name:'Skyr + frutta secca',items:'200g skyr + 20g mandorle + 1 pera',kcal:280,pro:24}]},
-    {id:'m4',slot:'Cena',name:'Uova + lenticchie',foods:[['uovo',4],['lenticchie',150],['pomodori',100],['evo',1]],
-      alts:[{name:'Pollo + lenticchie',items:'150g pollo + 150g lenticchie + pomodori + EVO',kcal:480,pro:44},
-            {name:'Tonno + fagioli',items:'160g tonno + 150g fagioli cannellini + pomodori',kcal:480,pro:42},
-            {name:'Salmone + lenticchie',items:'150g salmone + 150g lenticchie + pomodori + EVO',kcal:480,pro:40},
-            {name:'Tacchino + lenticchie',items:'150g tacchino + 150g lenticchie + spinaci + EVO',kcal:480,pro:46}]},
-    {id:'m5',slot:'Pre-nanna',name:'Caseine o ricotta',foods:[['caseine',1]],
-      alts:[{name:'Yogurt greco',items:'200g yogurt greco 0% + cannella',kcal:200,pro:18}]},
+    {id:'m1',slot:'Colazione',name:'Huel + banana + arachidi',foods:[['huel',2],['banana',1],['burroarachidi',1]],
+      alts:[{name:'Porridge + frutta',items:'80g avena + 1 scoop whey + 250ml latte avena + 1 banana',kcal:600,pro:42}]},
+    {id:'m2',slot:'Pranzo',name:'Tacchino + riso + spinaci',foods:[['tacchino',120],['riso',340],['spinaci',150],['evo',1]],
+      alts:[{name:'Pollo + riso',items:'120g pollo + 340g riso cotto + spinaci + EVO',kcal:730,pro:48},
+            {name:'Gamberi + riso',items:'180g gamberi + 340g riso cotto + spinaci + EVO',kcal:730,pro:46},
+            {name:'Tempeh + riso',items:'150g tempeh + 300g riso cotto + spinaci',kcal:730,pro:40}]},
+    {id:'m3',slot:'Spuntino',name:'Pre/post workout · Yogurt greco + avena + miele',foods:[['yogurtgreco',200],['avena',40],['miele',1],['mela',1]],
+      alts:[{name:'Whey + gallette + banana',items:'1 scoop whey + 40g gallette di riso + 1 banana',kcal:430,pro:30}]},
+    {id:'m4',slot:'Cena',name:'Salmone + patate dolci',foods:[['salmone',150],['patatedolci',320],['pane',2],['insalata',80]],
+      alts:[{name:'Trota + patate dolci',items:'170g trota + 320g patate dolci + 2 fette pane + insalata',kcal:760,pro:44},
+            {name:'Pollo + patate dolci',items:'150g pollo + 320g patate dolci + 2 fette pane + insalata',kcal:760,pro:52}]},
+    {id:'m5',slot:'Pre-nanna',name:'Skyr + arachidi + cacao',foods:[['skyr',200],['burroarachidi',1],['cacao',1]],
+      alts:[{name:'Caseine + arachidi',items:'1 scoop caseine + 250ml latte + 1 cucchiaio burro arachidi',kcal:230,pro:28}]},
   ],
   fri:[
-    {id:'m1',slot:'Colazione',name:'Huel + banana + arachidi',foods:[['huel',2],['latteavena',300],['banana',1],['burroarachidi',1]],
-      alts:[{name:'Porridge ricco',items:'70g avena + 1 scoop whey + latte avena + banana + burro arachidi',kcal:650,pro:42},
-            {name:'Uova + avocado toast',items:'3 uova + 2 fette pane + ½ avocado + banana',kcal:650,pro:36}]},
-    {id:'m2',slot:'Pranzo',name:'Pollo + riso + avocado',foods:[['pollo',180],['riso',200],['insalata',80],['avocado',75]],
-      alts:[{name:'Tacchino + riso',items:'180g tacchino + 200g riso + insalata + ½ avocado',kcal:640,pro:46},
-            {name:'Gamberi + riso',items:'200g gamberi + 200g riso + insalata + avocado',kcal:640,pro:42},
-            {name:'Manzo + riso',items:'170g manzo magro + 200g riso + insalata + ½ avocado',kcal:640,pro:46},
-            {name:'Burrito bowl pollo',items:'160g pollo + 180g riso + fagioli neri + mais + avocado',kcal:640,pro:44}]},
-    {id:'m3',slot:'Spuntino',name:'Whey + mandorle',foods:[['whey',1],['mandorle',30]],
-      alts:[{name:'Yogurt greco + noci',items:'200g yogurt greco + 25g noci',kcal:280,pro:22}]},
-    {id:'m4',slot:'Cena',name:'Branzino + patate dolci',foods:[['branzino',200],['patatedolci',150],['asparagi',100],['evo',1]],
-      alts:[{name:'Orata + patate dolci',items:'200g orata + 150g patate dolci + asparagi + EVO',kcal:520,pro:40},
-            {name:'Salmone + patate dolci',items:'180g salmone + 150g patate dolci + asparagi',kcal:520,pro:38},
-            {name:'Merluzzo + patate dolci',items:'200g merluzzo + 150g patate dolci + asparagi + EVO',kcal:520,pro:42},
-            {name:'Pollo + patate dolci',items:'160g pollo + 150g patate dolci + asparagi + EVO',kcal:520,pro:44}]},
-    {id:'m5',slot:'Pre-nanna',name:'Ricotta + cacao',foods:[['ricotta',200],['cacao',1]],
-      alts:[{name:'Caseine',items:'1 scoop caseine + 250ml acqua',kcal:220,pro:24}]},
+    {id:'m1',slot:'Colazione',name:'Huel + banana + arachidi',foods:[['huel',2],['banana',1],['burroarachidi',1]],
+      alts:[{name:'Uova + avocado toast',items:'3 uova + 2 fette pane + ¼ avocado + banana',kcal:600,pro:30}]},
+    {id:'m2',slot:'Pranzo',name:'Pollo + riso + avocado',foods:[['pollo',120],['riso',330],['insalata',80],['avocado',50]],
+      alts:[{name:'Manzo + riso',items:'120g manzo magro + 330g riso cotto + insalata + avocado',kcal:720,pro:44},
+            {name:'Burrito bowl pollo',items:'120g pollo + 300g riso + fagioli neri + mais + avocado',kcal:720,pro:46}]},
+    {id:'m3',slot:'Spuntino',name:'Pre/post workout · Yogurt greco + avena + banana',foods:[['yogurtgreco',200],['avena',40],['miele',1],['banana',1]],
+      alts:[{name:'Whey + gallette + banana',items:'1 scoop whey + 40g gallette di riso + 1 banana',kcal:440,pro:30}]},
+    {id:'m4',slot:'Cena',name:'Branzino + patate + asparagi',foods:[['branzino',180],['patate',300],['pane',2],['asparagi',100],['evo',1]],
+      alts:[{name:'Orata + patate',items:'180g orata + 300g patate + 2 fette pane + asparagi + EVO',kcal:680,pro:44},
+            {name:'Salmone + patate',items:'150g salmone + 300g patate + 2 fette pane + asparagi',kcal:680,pro:44}]},
+    {id:'m5',slot:'Pre-nanna',name:'Skyr + arachidi + cacao',foods:[['skyr',200],['burroarachidi',1],['cacao',1]],
+      alts:[{name:'Caseine + arachidi',items:'1 scoop caseine + 250ml latte + 1 cucchiaio burro arachidi',kcal:230,pro:28}]},
   ],
   sat:[
-    {id:'m1',slot:'Colazione',name:'Huel Black',foods:[['huel',2]],alts:M.huelBase.alts},
-    {id:'mfree',slot:'Pranzo',free:true,name:'Pasto libero',items:'Mangia quello che vuoi e goditelo. Un pasto libero/sett. non compromette nulla, anzi aiuta la compliance. Unica regola: una fonte proteica nel piatto.',alts:[]},
-    {id:'m3',slot:'Spuntino',name:'Yogurt greco + frutta',foods:[['yogurtgreco',200],['fruttibosco',100]],
-      alts:[{name:'Skyr',items:'200g skyr + frutta fresca',kcal:200,pro:22}]},
-    {id:'m4',slot:'Cena',name:'Salmone + riso + verdure',foods:[['salmone',180],['verduremiste',150],['riso',100]],
-      alts:[{name:'Pollo + riso',items:'160g pollo + verdure + 100g riso',kcal:480,pro:44},
-            {name:'Tonno + riso',items:'160g tonno + verdure + 100g riso',kcal:480,pro:42},
-            {name:'Gamberi + riso',items:'180g gamberi + verdure + 100g riso',kcal:480,pro:40},
-            {name:'Tacchino + riso',items:'160g tacchino + verdure + 100g riso',kcal:480,pro:46}]},
+    {id:'m1',slot:'Colazione',name:'Huel + banana + arachidi',foods:[['huel',2],['banana',1],['burroarachidi',1]],alts:M.huelBase.alts},
+    {id:'mfree',slot:'Pranzo',free:true,name:'Pasto libero',items:'Mangia quello che vuoi e goditelo. Un pasto libero a settimana non compromette nulla e aiuta la costanza. Unica regola: una fonte proteica nel piatto.',alts:[]},
+    {id:'m3',slot:'Spuntino',name:'Pre/post workout · Yogurt greco + avena + frutti di bosco',foods:[['yogurtgreco',200],['avena',40],['miele',1],['fruttibosco',100]],
+      alts:[{name:'Skyr + muesli',items:'200g skyr + 50g muesli + frutti di bosco',kcal:380,pro:28}]},
+    {id:'m4',slot:'Cena',name:'Salmone + riso + verdure',foods:[['salmone',150],['riso',250],['verduremiste',150]],
+      alts:[{name:'Pollo + riso',items:'150g pollo + 250g riso cotto + verdure',kcal:670,pro:52},
+            {name:'Tonno + riso',items:'150g tonno + 250g riso cotto + verdure',kcal:670,pro:46}]},
+    {id:'m5',slot:'Pre-nanna',name:'Skyr + arachidi + cacao',foods:[['skyr',200],['burroarachidi',1],['cacao',1]],
+      alts:[{name:'Caseine + arachidi',items:'1 scoop caseine + 250ml latte + 1 cucchiaio burro arachidi',kcal:230,pro:28}]},
   ],
   sun:[
-    {id:'m1',slot:'Colazione',name:'Huel + frutti di bosco',foods:[['huel',2],['latteavena',300],['fruttibosco',80]],
-      alts:[{name:'Porridge',items:'60g avena + 1 scoop whey + latte avena + frutti di bosco',kcal:500,pro:40}]},
-    {id:'m2',slot:'Pranzo',name:'Pollo arrosto + patate',foods:[['pollo',200],['patate',150],['insalata',80],['evo',1]],
-      alts:[{name:'Tacchino arrosto',items:'200g tacchino + 150g patate forno + insalata + EVO',kcal:620,pro:48},
-            {name:'Coniglio/arrosto magro',items:'200g carne bianca + 150g patate + insalata',kcal:620,pro:46},
-            {name:'Salmone al forno',items:'200g salmone + 150g patate forno + insalata + EVO',kcal:620,pro:42},
-            {name:'Roast beef + patate',items:'180g roast beef + 150g patate forno + insalata',kcal:620,pro:48}]},
-    {id:'m3',slot:'Spuntino',name:'Noci + frutto',foods:[['noci',30],['mela',1]],
-      alts:[{name:'Yogurt greco',items:'200g yogurt greco 0% + 1 frutto',kcal:200,pro:18}]},
-    {id:'m4',slot:'Cena',name:'Uova + ceci',foods:[['uovo',3],['ceci',150],['spinaci',100],['evo',1]],
-      alts:[{name:'Pollo + ceci',items:'130g pollo + 150g ceci + spinaci + EVO',kcal:460,pro:40},
-            {name:'Tonno + ceci',items:'150g tonno + 150g ceci + spinaci + limone',kcal:460,pro:42},
-            {name:'Gamberi + ceci',items:'160g gamberi + 150g ceci + spinaci + EVO',kcal:460,pro:38},
-            {name:'Feta + ceci (veg)',items:'80g feta + 150g ceci + spinaci + pomodori + EVO',kcal:460,pro:30}]},
-    {id:'m5',slot:'Pre-nanna',name:'Yogurt greco + cannella',foods:[['yogurtgreco',200]],
-      alts:[{name:'Ricotta',items:'180g ricotta magra + cannella',kcal:180,pro:16}]},
+    {id:'m1',slot:'Colazione',name:'Huel + frutti di bosco + arachidi',foods:[['huel',2],['fruttibosco',80],['burroarachidi',1]],
+      alts:[{name:'Porridge',items:'70g avena + 1 scoop whey + latte avena + frutti di bosco',kcal:530,pro:40}]},
+    {id:'m2',slot:'Pranzo',name:'Pollo arrosto + patate',foods:[['pollo',150],['patate',400],['insalata',80],['evo',1]],
+      alts:[{name:'Tacchino arrosto + patate',items:'170g tacchino + 400g patate al forno + insalata + EVO',kcal:660,pro:52},
+            {name:'Roast beef + patate',items:'150g roast beef + 400g patate al forno + insalata',kcal:660,pro:50}]},
+    {id:'m3',slot:'Spuntino',name:'Yogurt greco + noci + mela',foods:[['yogurtgreco',200],['noci',20],['mela',1]],
+      alts:[{name:'Skyr + frutta',items:'200g skyr + 20g mandorle + 1 frutto',kcal:340,pro:28}]},
+    {id:'m4',slot:'Cena',name:'Uova + ceci + spinaci',foods:[['uovo',2],['ceci',180],['spinaci',100],['pane',2],['evo',1]],
+      alts:[{name:'Pollo + ceci',items:'130g pollo + 180g ceci + spinaci + 2 fette pane + EVO',kcal:710,pro:52},
+            {name:'Tonno + ceci',items:'150g tonno + 180g ceci + spinaci + 2 fette pane',kcal:710,pro:50}]},
+    {id:'m5',slot:'Pre-nanna',name:'Skyr + cacao',foods:[['skyr',200],['cacao',1]],
+      alts:[{name:'Caseine',items:'1 scoop caseine + 250ml acqua',kcal:140,pro:24}]},
   ],
 };
 
@@ -1649,6 +1780,10 @@ function load(){
   if(!s.rpg.boss) s.rpg.boss={};
   if(!s.rpg.awarded) s.rpg.awarded={}; // anti-doppio-XP per data:evento
   if(!s.theme) s.theme='system';
+  // piano Massa nov 2026: attiva una sola volta programma Upper/Lower, obiettivo Massa, palestra
+  if(!s.profile.planMassa2611){ s.profile.program='ul5'; s.profile.goal='mass'; s.equip='gym';
+    if(!s.profile.height) s.profile.height=180; if(!s.profile.age) s.profile.age=34; if(!s.profile.sex) s.profile.sex='m';
+    s.profile.weight=67; s.profile.planMassa2611=true; }
   pruneOld(s);
   return s;
 }
@@ -1872,6 +2007,14 @@ function tdeeOf(p){ return bmrOf(p)*(ACT[p.activity]||1.2); }
 function computeTargets(idx){
   const p=state.profile, g=goal();
   const isW=!!effWorkoutId(idx);
+  const PT=activeProgram().targets;
+  if(PT && !p.useCustomMacros){ // piano Massa: target fissi giorno allenamento / riposo
+    const t=isW?PT.train:PT.rest;
+    const ex=(state.activity&&state.activity[fmt(dateOf(idx))])||0;
+    const kcal=Math.round(t.kcal+ex*0.5), pro=t.pro, fat=t.fat, cho=Math.max(0,Math.round((kcal-pro*4-fat*9)/4));
+    return {kcal,pro,cho,fat, fib:Math.round(kcal/1000*14), sug:Math.round(kcal*0.10/4), sat:Math.round(kcal*0.10/9), sal:5,
+      water: p.weight?Math.round(p.weight*35):2500, isWorkout:isW, hasProfile:hasProfileNums(p)};
+  }
   let kcal = hasProfileNums(p) ? tdeeOf(p)*g.kcal : planMacros(idx).kcal*g.kcal;
   // attività extra registrata → si "rimangia" metà delle kcal bruciate
   const extra=(state.activity&&state.activity[fmt(dateOf(idx))])||0; kcal += extra*0.5;
@@ -2486,8 +2629,9 @@ function viewTrain(){
 
     <div class="banner banner-goal">
       <i data-lucide="${goal().icon}"></i>
-      <div><div class="b-t">Strategia ${goal().short}${mode==='gym'?' · Palestra':''} — ${scheme().repsMain} fondamentali · ${scheme().repsAcc} accessori · RPE ${scheme().rpe}</div>
-      <div class="b-d">${scheme().note}</div></div>
+      ${activeProgram().fixedScheme?`<div><div class="b-t">Piano Massa — serie, ripetizioni e recuperi fissi per esercizio</div>
+      <div class="b-d">RIR 1–2 (RPE 8–9). Quando chiudi tutte le serie al massimo delle reps, +2,5 kg sui fondamentali o +1–2 kg sui manubri. Ciclo di 6 settimane: la 6ª è di scarico (stessi carichi, metà serie).</div></div>`:`<div><div class="b-t">Strategia ${goal().short}${mode==='gym'?' · Palestra':''} — ${scheme().repsMain} fondamentali · ${scheme().repsAcc} accessori · RPE ${scheme().rpe}</div>
+      <div class="b-d">${scheme().note}</div></div>`}
     </div>
 
     <div class="banner">
@@ -2808,7 +2952,7 @@ function viewProfile(){
     <div class="goalgrid" style="grid-template-columns:1fr 1fr">
       ${Object.keys(PROGRAMS).map(k=>{const pr=PROGRAMS[k];const on=programKey()===k;
         return `<button class="goalcard ${on?'sel':''}" data-program="${k}" style="text-align:left;flex-direction:row;align-items:flex-start;gap:10px">
-          <i data-lucide="${k==='fullbody'?'flame':'layout-grid'}"></i>
+          <i data-lucide="${k==='fullbody'?'flame':k==='ul5'?'dumbbell':'layout-grid'}"></i>
           <div style="flex:1"><div class="gc-t" style="font-size:13px">${pr.name}</div><div class="gc-d">${pr.desc}</div></div>
         </button>`;}).join('')}
     </div>

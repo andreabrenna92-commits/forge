@@ -2,7 +2,7 @@
 // Strategia: network-first per la pagina/HTML (così gli aggiornamenti arrivano
 // quando sei online), cache-first per gli asset statici (font, icone) e
 // fallback alla cache quando sei offline.
-const CACHE = 'forge-v2';
+const CACHE = 'forge-v3';
 const ASSETS = [
   './',
   './index.html',
